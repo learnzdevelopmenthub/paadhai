@@ -1,4 +1,4 @@
-# Devflow — Gemini CLI
+# Paadhai — Gemini CLI
 
 Read `references/gemini-tools.md` for capability marker → tool mappings.
 
@@ -19,7 +19,7 @@ Read `references/gemini-tools.md` for capability marker → tool mappings.
 
 ## Config
 
-All skills read from `.devflow.json` at project root. Run `/project-init` to create it.
+All skills read from `.paadhai.json` at project root. Run `/project-init` to create it.
 
 ## Subagent Support
 

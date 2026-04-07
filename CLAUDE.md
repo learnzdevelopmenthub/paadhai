@@ -1,4 +1,4 @@
-# Devflow — Claude Code
+# Paadhai — Claude Code
 
 Read `references/claude-tools.md` for capability marker → tool mappings.
 
@@ -19,4 +19,4 @@ Read `references/claude-tools.md` for capability marker → tool mappings.
 
 ## Config
 
-All skills read from `.devflow.json` at project root. Run `/project-init` to create it.
+All skills read from `.paadhai.json` at project root. Run `/project-init` to create it.

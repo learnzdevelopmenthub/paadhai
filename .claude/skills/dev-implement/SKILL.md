@@ -20,9 +20,9 @@ If the user says "continue" or "resume":
 
 ## STEP 1 — Load Config
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 Store:
 - `{config.stack.build_cmd}` / `{config.stack.lint_cmd}` / `{config.stack.test_cmd}`

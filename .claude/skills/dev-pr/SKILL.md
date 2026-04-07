@@ -13,9 +13,9 @@ Push the feature branch, create the pull request, poll CI, and report results.
 
 ## STEP 1 — Load Config
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 [READ] `docs/plans/issue-<n>/plan.md` — derive issue number from current branch first.
 

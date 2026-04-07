@@ -1,12 +1,12 @@
-# Paadhai (பாதை) — Devflow
+# Paadhai (பாதை)
 
 **AI-Native SDLC Pipeline**
 
-## What is Devflow?
+## What is Paadhai?
 
-Devflow is an AI-native software development lifecycle (SDLC) pipeline consisting of 10 integrated skills that guide you from project initialization through shipping and releasing. It works with Claude Code, Cursor, Codex CLI, OpenCode, and Gemini CLI, providing a consistent, config-driven workflow powered by AI agents.
+Paadhai is an AI-native software development lifecycle (SDLC) pipeline consisting of 10 integrated skills that guide you from project initialization through shipping and releasing. It works with Claude Code, Cursor, Codex CLI, OpenCode, and Gemini CLI, providing a consistent, config-driven workflow powered by AI agents.
 
-The pipeline is built around a core configuration file (`.devflow.json`) that captures your project structure, tech stack, and GitHub settings. Each skill is a self-contained agent that builds on the work of previous skills, orchestrating the entire development workflow from planning through release.
+The pipeline is built around a core configuration file (`.paadhai.json`) that captures your project structure, tech stack, and GitHub settings. Each skill is a self-contained agent that builds on the work of previous skills, orchestrating the entire development workflow from planning through release.
 
 ## Pipeline Overview
 
@@ -27,23 +27,23 @@ The pipeline is built around a core configuration file (`.devflow.json`) that ca
 ### Claude Code
 
 ```bash
-/plugin install devflow
+/plugin install paadhai
 ```
 
 Or manually clone the repository and copy skills:
 
 ```bash
-git clone https://github.com/paadhai/devflow.git
-cp -r devflow/.claude/skills/* ~/.claude/skills/
+git clone https://github.com/paadhai/paadhai.git
+cp -r paadhai/.claude/skills/* ~/.claude/skills/
 ```
 
 ### Cursor
 
-Search for "Devflow" in the Cursor plugin marketplace, or manually install by cloning the repository and copying into `.cursor-plugins/`:
+Search for "Paadhai" in the Cursor plugin marketplace, or manually install by cloning the repository and copying into `.cursor-plugins/`:
 
 ```bash
-git clone https://github.com/paadhai/devflow.git
-cp -r devflow/.cursor-plugins/devflow/ ~/.cursor-plugins/
+git clone https://github.com/paadhai/paadhai.git
+cp -r paadhai/.cursor-plugins/paadhai/ ~/.cursor-plugins/
 ```
 
 ### Codex CLI
@@ -51,9 +51,9 @@ cp -r devflow/.cursor-plugins/devflow/ ~/.cursor-plugins/
 Clone the repository and copy the agent configuration:
 
 ```bash
-git clone https://github.com/paadhai/devflow.git
-cp -r devflow/.codex-plugin/ your-project/
-cp devflow/AGENTS.md your-project/
+git clone https://github.com/paadhai/paadhai.git
+cp -r paadhai/.codex-plugin/ your-project/
+cp paadhai/AGENTS.md your-project/
 ```
 
 ### OpenCode
@@ -61,22 +61,22 @@ cp devflow/AGENTS.md your-project/
 Clone the repository and copy the agent configuration:
 
 ```bash
-git clone https://github.com/paadhai/devflow.git
-cp -r devflow/.opencode/ your-project/
-cp devflow/AGENTS.md your-project/
+git clone https://github.com/paadhai/paadhai.git
+cp -r paadhai/.opencode/ your-project/
+cp paadhai/AGENTS.md your-project/
 ```
 
 ### Gemini CLI
 
 ```bash
-gemini extensions install devflow
+gemini extensions install paadhai
 ```
 
 Or manually copy:
 
 ```bash
-git clone https://github.com/paadhai/devflow.git
-cp -r devflow/.gemini/extensions/devflow/ ~/.gemini/extensions/
+git clone https://github.com/paadhai/paadhai.git
+cp -r paadhai/.gemini/extensions/paadhai/ ~/.gemini/extensions/
 ```
 
 ## Quick Start
@@ -84,7 +84,7 @@ cp -r devflow/.gemini/extensions/devflow/ ~/.gemini/extensions/
 Follow these steps to get started with a new or existing project:
 
 ```bash
-/project-init    → set up your GitHub repo + write .devflow.json
+/project-init    → set up your GitHub repo + write .paadhai.json
 /project-plan    → define requirements (generates docs/srs.md)
 /release-plan    → create milestones + issues on GitHub
 /dev-start #1    → create feature branch for issue #1
@@ -111,13 +111,13 @@ Follow these steps to get started with a new or existing project:
 | Dev Ship | `/dev-ship` | Merge PR, update GitHub board, and clean up |
 | Dev Release | `/dev-release` | Tag version, publish GitHub Release, and back-merge |
 
-## Configuration (`.devflow.json`)
+## Configuration (`.paadhai.json`)
 
-The `.devflow.json` file is automatically created by `/project-init` and contains the core configuration for your project:
+The `.paadhai.json` file is automatically created by `/project-init` and contains the core configuration for your project:
 
 | Key | Description |
 |-----|-------------|
-| `version` | Devflow configuration schema version |
+| `version` | Paadhai configuration schema version |
 | `repo` | Repository name, owner, and local path |
 | `github` | GitHub API settings and authentication |
 | `stack` | Tech stack, languages, and framework information |
@@ -136,8 +136,8 @@ The `/project-init` skill will guide you through creating this file with sensibl
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to Devflow.
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to Paadhai.
 
 ## License
 
-Devflow is released under the MIT License. See [LICENSE](LICENSE) for details.
+Paadhai is released under the MIT License. See [LICENSE](LICENSE) for details.

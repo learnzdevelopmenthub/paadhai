@@ -13,9 +13,9 @@ Pick an issue, run pre-flight checks, create the feature branch, move the issue 
 
 ## STEP 1 — Load Config
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 Store config values for use throughout:
 - `{config.repo.owner}` / `{config.repo.name}`
@@ -62,7 +62,7 @@ git branch --show-current
 ```
 
 - If not on `{config.repo.develop_branch}` → switch to it
-- If dirty state → offer to stash: `git stash push -m "devflow: pre dev-start"` or stop
+- If dirty state → offer to stash: `git stash push -m "paadhai: pre dev-start"` or stop
 
 [SHELL] Ensure develop is up to date:
 ```bash

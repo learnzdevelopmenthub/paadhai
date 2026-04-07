@@ -13,9 +13,9 @@ Merge the approved PR, move issue to Done on the project board, clean up the fea
 
 ## STEP 1 — Load Config
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}`

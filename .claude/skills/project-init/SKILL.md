@@ -1,11 +1,11 @@
 ---
 name: project-init
-description: Use when setting up a new or existing project — verify GitHub access, initialize repo, write .devflow.json
+description: Use when setting up a new or existing project — verify GitHub access, initialize repo, write .paadhai.json
 ---
 
 # project-init: Project Setup
 
-Set up a new or existing GitHub project, write `.devflow.json`, create branches and project board.
+Set up a new or existing GitHub project, write `.paadhai.json`, create branches and project board.
 
 ---
 
@@ -120,8 +120,8 @@ Display ALL planned actions:
 Actions to perform:
 ─────────────────────────────────────────────
 Repo          : {owner}/{repo-name} [create / already exists]
-.devflow.json : Will write to project root
-  {full .devflow.json content}
+.paadhai.json : Will write to project root
+  {full .paadhai.json content}
 
 Branches      : develop [create / already exists], main [already exists]
 Project board : {board-name} [create / link existing]
@@ -142,7 +142,7 @@ Wait for explicit "yes".
 
 All at once — no intermediate confirmations.
 
-[WRITE] `.devflow.json` to project root:
+[WRITE] `.paadhai.json` to project root:
 ```json
 {
   "version": "1",
@@ -195,7 +195,7 @@ git push -u origin develop
 
 ```
 ✓ Repo          : https://github.com/{owner}/{repo-name}
-✓ .devflow.json : written
+✓ .paadhai.json : written
 ✓ develop       : pushed to origin
 ✓ Project board : {board-url}
 ```

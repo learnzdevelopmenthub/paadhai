@@ -1,17 +1,17 @@
-# Contributing to Devflow
+# Contributing to Paadhai
 
-Thank you for contributing to Devflow — an open-source AI-native SDLC pipeline.
+Thank you for contributing to Paadhai — an open-source AI-native SDLC pipeline.
 
 ## Getting Started
 
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/<your-username>/paadhai.git`
 3. Install prerequisites: `git` (2.x+), `gh` (GitHub CLI 2.x+)
-4. Set up Devflow itself: run `/project-init` in your fork
+4. Set up Paadhai itself: run `/project-init` in your fork
 
 ## Development Workflow
 
-Devflow eats its own dog food. Use Devflow to contribute to Devflow:
+Paadhai eats its own dog food. Use Paadhai to contribute to Paadhai:
 
 ```
 /dev-start #<issue>      → create feature branch
@@ -24,7 +24,7 @@ Devflow eats its own dog food. Use Devflow to contribute to Devflow:
 
 ## Skill File Format
 
-Each Devflow skill is a Markdown file with YAML frontmatter:
+Each Paadhai skill is a Markdown file with YAML frontmatter:
 
 ```yaml
 ---
@@ -34,7 +34,7 @@ description: Use when <condition> — <what it does>
 ```
 
 **Rules for skill files:**
-- All repo-specific values must come from `.devflow.json` via `{config.*}` references
+- All repo-specific values must come from `.paadhai.json` via `{config.*}` references
 - Zero hardcoded values (no repo names, no project IDs, no stack commands)
 - Every action must have a capability marker: `[READ]`, `[SHELL]`, `[WRITE]`, `[DELEGATE]`, `[PARALLEL]`, `[FAST-MODEL]`, `[SMART-MODEL]`, `[SEARCH]`
 - Human gates must be labeled G-01 through G-10 with exact wording

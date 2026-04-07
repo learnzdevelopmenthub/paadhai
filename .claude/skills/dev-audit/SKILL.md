@@ -13,9 +13,9 @@ Architecture, security, and compatibility review of the PR with explicit human s
 
 ## STEP 1 — Load Config
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 [READ] `docs/plans/issue-<n>/plan.md` — derive issue number from current branch first.
 
@@ -80,7 +80,7 @@ Check:
 - Breaking API changes (public interface changes without versioning)
 - Dependency conflicts (new package versions conflicting with existing)
 - Platform-specific code (assumes OS, file paths, env vars)
-- Config schema breaks (changes to `.devflow.json` or similar config files)
+- Config schema breaks (changes to `.paadhai.json` or similar config files)
 - Migration requirements (schema changes needing database migrations)
 
 Report: **PASS** / **FAIL** with specific findings.

@@ -13,9 +13,9 @@ Break the confirmed SRS into GitHub milestones and atomic issues, then create th
 
 ## STEP 1 — Load Config + SRS
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 [READ] `docs/srs.md` — hard stop if missing:
 

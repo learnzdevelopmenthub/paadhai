@@ -13,9 +13,9 @@ Brainstorm, design review, version validation, generate plan + implementation do
 
 ## STEP 1 — Load Config
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 Store config values:
 - `{config.repo.owner}` / `{config.repo.name}`

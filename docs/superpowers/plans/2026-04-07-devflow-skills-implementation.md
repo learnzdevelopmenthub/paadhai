@@ -1,10 +1,10 @@
-# Devflow Skills Implementation Plan
+# Paadhai Skills Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the complete Devflow tool — 10 generic AI agent skills covering the full SDLC, platform support files for 5 platforms, templates, and documentation.
+**Goal:** Build the complete Paadhai tool — 10 generic AI agent skills covering the full SDLC, platform support files for 5 platforms, templates, and documentation.
 
-**Architecture:** Each skill is a `SKILL.md` file with YAML frontmatter. Skills read `.devflow.json` at runtime for all repo-specific values. Capability markers (`[READ]`, `[SHELL]`, `[DELEGATE]`, etc.) map to platform-native tools via reference files in `references/`.
+**Architecture:** Each skill is a `SKILL.md` file with YAML frontmatter. Skills read `.paadhai.json` at runtime for all repo-specific values. Capability markers (`[READ]`, `[SHELL]`, `[DELEGATE]`, etc.) map to platform-native tools via reference files in `references/`.
 
 **Tech Stack:** Markdown, YAML frontmatter, GitHub CLI (`gh`), bash, JSON
 
@@ -15,7 +15,7 @@
 ### Skills (`.claude/skills/`)
 | File | Responsibility |
 |------|---------------|
-| `project-init/SKILL.md` | New/existing repo setup, write `.devflow.json` |
+| `project-init/SKILL.md` | New/existing repo setup, write `.paadhai.json` |
 | `project-plan/SKILL.md` | SRS generation from product idea |
 | `release-plan/SKILL.md` | Break SRS into milestones + issues on GitHub |
 | `dev-start/SKILL.md` | Issue intake, branch creation, board sync |
@@ -48,7 +48,7 @@
 | `.cursor-plugin/plugin.json` | Cursor plugin manifest |
 | `.cursor-plugin/marketplace.json` | Cursor marketplace metadata |
 | `.codex-plugin/plugin.json` | Codex CLI plugin manifest |
-| `.gemini/extensions/devflow/gemini-extension.json` | Gemini CLI extension manifest |
+| `.gemini/extensions/paadhai/gemini-extension.json` | Gemini CLI extension manifest |
 | `CLAUDE.md` | Claude Code instruction/loader file |
 | `AGENTS.md` | Universal instruction file (Cursor + Codex + OpenCode) |
 | `GEMINI.md` | Gemini CLI context/loader file |
@@ -108,7 +108,7 @@ mkdir -p .cursor-plugin
 mkdir -p .codex-plugin
 mkdir -p .opencode/skills
 mkdir -p .opencode/plugins
-mkdir -p .gemini/extensions/devflow
+mkdir -p .gemini/extensions/paadhai
 ```
 
 - [ ] **Step 4: Initial commit**
@@ -123,7 +123,7 @@ git commit -m "chore: initial project setup with SRS"
 ## Phase 1: Refactor Existing Skills (Generic Config)
 
 All 4 existing skills must be rewritten to:
-1. Read `.devflow.json` at Step 1 (hard stop if missing, except `project-init`)
+1. Read `.paadhai.json` at Step 1 (hard stop if missing, except `project-init`)
 2. Replace ALL hardcoded values with config references: `{config.repo.owner}`, `{config.repo.name}`, `{config.github.project_id}`, `{config.stack.build_cmd}`, etc.
 3. Add capability markers to every action (`[READ]`, `[SHELL]`, `[DELEGATE]`, etc.)
 4. Use `{config.branches.feature}` instead of hardcoded `feature/`
@@ -138,7 +138,7 @@ All 4 existing skills must be rewritten to:
 
 **Current state:** 6 steps, hardcoded to `learnzdevelopmenthub/ninaivagam`, hardcoded project IDs (`PVT_kwHOCLuofc4BTYOm`, `PVTSSF_lAHOCLuofc4BTYOmzhAoxz4`, `47fc9ee4`, `98236657`).
 
-**Target state:** 10 steps per SRS 4.4. All values from `.devflow.json`.
+**Target state:** 10 steps per SRS 4.4. All values from `.paadhai.json`.
 
 - [ ] **Step 1: Read existing file**
 
@@ -164,9 +164,9 @@ Pick an issue, run pre-flight checks, create the feature branch, move the issue 
 
 ## STEP 1 — Load Config
 
-[READ] `.devflow.json` — hard stop if missing:
+[READ] `.paadhai.json` — hard stop if missing:
 
-> No `.devflow.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/project-init` first.
 
 Store config values for use throughout:
 - `{config.repo.owner}` / `{config.repo.name}`
@@ -213,7 +213,7 @@ git branch --show-current
 ```
 
 - If not on `{config.repo.develop_branch}` → switch to it
-- If dirty state → offer to stash: `git stash push -m "devflow: pre dev-start"` or stop
+- If dirty state → offer to stash: `git stash push -m "paadhai: pre dev-start"` or stop
 
 [SHELL] Ensure develop is up to date:
 ```bash
@@ -308,10 +308,10 @@ Search the written file for any of: `learnzdevelopmenthub`, `ninaivagam`, `PVT_k
 
 ```bash
 git add .claude/skills/dev-start/SKILL.md
-git commit -m "refactor(dev-start): replace hardcoded values with .devflow.json config
+git commit -m "refactor(dev-start): replace hardcoded values with .paadhai.json config
 
 All repo names, project IDs, status field IDs, and branch prefixes
-now read from .devflow.json at Step 1."
+now read from .paadhai.json at Step 1."
 ```
 
 ---
@@ -342,7 +342,7 @@ description: Use when planning GitHub issues — brainstorm, design review, vers
 
 **Key sections to include (in order):**
 
-1. **STEP 1 — Load Config**: `[READ] .devflow.json` — hard stop if missing. Store `{config.repo.owner}`, `{config.repo.name}`, `{config.stack.build_cmd}`, `{config.stack.lint_cmd}`, `{config.stack.test_cmd}`.
+1. **STEP 1 — Load Config**: `[READ] .paadhai.json` — hard stop if missing. Store `{config.repo.owner}`, `{config.repo.name}`, `{config.stack.build_cmd}`, `{config.stack.lint_cmd}`, `{config.stack.test_cmd}`.
 
 2. **STEP 2 — Identify Issue**: `[SHELL]` `git branch --show-current` → derive issue number. `[SHELL]` Fetch issue via `gh api repos/{config.repo.owner}/{config.repo.name}/issues/<number>`.
 
@@ -388,7 +388,7 @@ Search for: `learnzdevelopmenthub`, `ninaivagam`, `npm run build`, `npm run lint
 
 ```bash
 git add .claude/skills/dev-plan/SKILL.md
-git commit -m "refactor(dev-plan): replace hardcoded values with .devflow.json config
+git commit -m "refactor(dev-plan): replace hardcoded values with .paadhai.json config
 
 All repo names, stack commands, and branch names now read from config.
 Added capability markers to all actions per SRS 4.5."
@@ -401,7 +401,7 @@ Added capability markers to all actions per SRS 4.5."
 **Files:**
 - Modify: `.claude/skills/dev-implement/SKILL.md`
 
-**Current state:** Mostly generic but hardcodes `npm run build/lint/test`. Missing `.devflow.json` read step. No capability markers.
+**Current state:** Mostly generic but hardcodes `npm run build/lint/test`. Missing `.paadhai.json` read step. No capability markers.
 
 **Target state:** Per SRS 4.6. Config-driven, capability markers, resumable.
 
@@ -418,7 +418,7 @@ description: Use when implementing confirmed plans — execute steps with code r
 
 **Key sections:**
 
-1. **STEP 1 — Load Config**: `[READ] .devflow.json`. Store `{config.stack.build_cmd}`, `{config.stack.lint_cmd}`, `{config.stack.test_cmd}`.
+1. **STEP 1 — Load Config**: `[READ] .paadhai.json`. Store `{config.stack.build_cmd}`, `{config.stack.lint_cmd}`, `{config.stack.test_cmd}`.
 
 2. **Resumption block**: If user says "continue", read impl doc → find first `pending` step → check `git status` for uncommitted work → resume. Never re-do `done` steps.
 
@@ -459,7 +459,7 @@ Search for `npm run`, hardcoded branch names. Must find zero.
 git add .claude/skills/dev-implement/SKILL.md
 git commit -m "refactor(dev-implement): add config loading and capability markers
 
-Stack commands now read from .devflow.json. Added [READ], [SHELL],
+Stack commands now read from .paadhai.json. Added [READ], [SHELL],
 [DELEGATE], [SMART-MODEL] markers per SRS 4.6."
 ```
 
@@ -487,7 +487,7 @@ description: Use when shipping — merge PR to develop, update project board, cl
 
 **Key sections (SRS 4.9):**
 
-1. **STEP 1 — Load Config**: `[READ] .devflow.json`. Store all needed config values.
+1. **STEP 1 — Load Config**: `[READ] .paadhai.json`. Store all needed config values.
 
 2. **STEP 2 — Display Context**: PR number, title, target branch (`{config.repo.develop_branch}`).
 
@@ -518,7 +518,7 @@ git add .claude/skills/dev-ship/SKILL.md
 git commit -m "refactor(dev-ship): strip to merge-only per SRS 4.9
 
 Removed PR creation (now /dev-pr), audit (now /dev-audit), and
-release (now /dev-release). All config from .devflow.json."
+release (now /dev-release). All config from .paadhai.json."
 ```
 
 ---
@@ -537,7 +537,7 @@ release (now /dev-release). All config from .devflow.json."
 ```yaml
 ---
 name: project-init
-description: Use when setting up a new or existing project — verify GitHub access, initialize repo, write .devflow.json
+description: Use when setting up a new or existing project — verify GitHub access, initialize repo, write .paadhai.json
 ---
 ```
 
@@ -566,18 +566,18 @@ description: Use when setting up a new or existing project — verify GitHub acc
    - `[DELEGATE][FAST-MODEL]` Query project field IDs via GraphQL
 
 5. **STEP 5 — Action Summary + Human Gate**:
-   - Display ALL planned actions: repo to create (or existing), `.devflow.json` full content, branch to push, project board action
+   - Display ALL planned actions: repo to create (or existing), `.paadhai.json` full content, branch to push, project board action
    - For existing projects: clearly mark what already exists (no action) vs what will be created
    - **G-01: "Proceed with setup? (yes/no)"**
 
 6. **STEP 6 — Execute (after G-01)**:
    All at once after approval:
-   - `[WRITE]` `.devflow.json` to project root
+   - `[WRITE]` `.paadhai.json` to project root
    - `[SHELL]` Create GitHub repo (new) or skip (existing)
    - `[SHELL]` Create `develop` branch if missing, push
    - `[DELEGATE][FAST-MODEL]` Create/link project board
 
-7. **STEP 7 — Display Results**: Repo URL, branches, project board URL, `.devflow.json` path.
+7. **STEP 7 — Display Results**: Repo URL, branches, project board URL, `.paadhai.json` path.
 
 8. **STEP 8 — Smart Handoff**:
    - New project → "Run /project-plan to define your requirements"
@@ -585,7 +585,7 @@ description: Use when setting up a new or existing project — verify GitHub acc
    - Existing, SRS but no issues → "Run /release-plan"
    - Existing, issues exist → "Run /dev-start #<number>"
 
-**`.devflow.json` schema** (written by this skill, include full example in the skill):
+**`.paadhai.json` schema** (written by this skill, include full example in the skill):
 ```json
 {
   "version": "1",
@@ -606,7 +606,7 @@ description: Use when setting up a new or existing project — verify GitHub acc
 git add .claude/skills/project-init/SKILL.md
 git commit -m "feat(project-init): add project initialization skill
 
-Supports new and existing GitHub repos. Writes .devflow.json,
+Supports new and existing GitHub repos. Writes .paadhai.json,
 creates repo/branch/board. Per SRS 4.1 + 4.1.1."
 ```
 
@@ -628,7 +628,7 @@ description: Use when defining requirements — transform a product idea into a 
 
 **Key sections (SRS 4.2):**
 
-1. **STEP 1 — Load Config**: `[READ] .devflow.json` — hard stop if missing.
+1. **STEP 1 — Load Config**: `[READ] .paadhai.json` — hard stop if missing.
 
 2. **STEP 2 — Read Existing Context**: `[READ]` any existing docs or codebase context.
 
@@ -676,7 +676,7 @@ description: Use when creating milestones and issues — break confirmed SRS int
 
 **Key sections (SRS 4.3):**
 
-1. **STEP 1 — Load Config + SRS**: `[READ] .devflow.json` + `[READ] docs/srs.md` — hard stop if either missing.
+1. **STEP 1 — Load Config + SRS**: `[READ] .paadhai.json` + `[READ] docs/srs.md` — hard stop if either missing.
 
 2. **STEP 2 — Analyze Requirements**: Group functional requirements into milestones (e.g. v0.1, v0.2).
 
@@ -750,7 +750,7 @@ description: Use when opening a pull request — push branch, create PR, poll CI
 
 **Key sections (SRS 4.7):**
 
-1. **STEP 1 — Load Config**: `[READ] .devflow.json` + plan file.
+1. **STEP 1 — Load Config**: `[READ] .paadhai.json` + plan file.
 
 2. **STEP 2 — Push Branch**: `[SHELL]` `git push origin {branch-name}`.
 
@@ -799,7 +799,7 @@ description: Use when reviewing a PR — architecture, security, and compatibili
 
 **Key sections (SRS 4.8):**
 
-1. **STEP 1 — Load Config**: `[READ] .devflow.json` + plan file.
+1. **STEP 1 — Load Config**: `[READ] .paadhai.json` + plan file.
 
 2. **STEP 2 — Verify CI**: `[SHELL]` `gh pr checks <pr-number>`. If red → stop, tell user to fix CI first.
 
@@ -848,7 +848,7 @@ description: Use when releasing — cut release branch, tag, publish GitHub Rele
 
 **Key sections (SRS 4.10):**
 
-1. **STEP 1 — Load Config**: `[READ] .devflow.json`.
+1. **STEP 1 — Load Config**: `[READ] .paadhai.json`.
 
 2. **STEP 2 — Verify Milestone Completion**: `[SHELL]` Check all milestone issues closed. If open → stop, show remaining.
 
@@ -906,7 +906,7 @@ Per SRS 4.10."
 ```markdown
 # Claude Code — Capability Marker Mapping
 
-This file maps Devflow capability markers to Claude Code native tools.
+This file maps Paadhai capability markers to Claude Code native tools.
 Loaded at session start via `CLAUDE.md`.
 
 | Marker | Claude Code Tool | Notes |
@@ -938,7 +938,7 @@ No fallback needed — Claude Code supports all markers natively.
 ```markdown
 # Cursor — Capability Marker Mapping
 
-This file maps Devflow capability markers to Cursor native tools.
+This file maps Paadhai capability markers to Cursor native tools.
 Loaded at session start via `CURSOR.md`.
 
 | Marker | Cursor Tool | Notes |
@@ -968,7 +968,7 @@ Cursor does NOT support subagent dispatch. All `[PARALLEL]` and `[DELEGATE]` tas
 ```markdown
 # Codex CLI — Capability Marker Mapping
 
-This file maps Devflow capability markers to Codex CLI native tools.
+This file maps Paadhai capability markers to Codex CLI native tools.
 Loaded at session start via Codex configuration.
 
 | Marker | Codex Tool | Notes |
@@ -998,7 +998,7 @@ Codex CLI does NOT support subagent dispatch.
 ```markdown
 # Gemini CLI — Capability Marker Mapping
 
-This file maps Devflow capability markers to Gemini CLI native tools.
+This file maps Paadhai capability markers to Gemini CLI native tools.
 Loaded at session start via `GEMINI.md`.
 
 | Marker | Gemini Tool | Notes |
@@ -1205,7 +1205,7 @@ Per SRS 4.2 and 4.7."
 - Create: `.cursor-plugin/plugin.json`
 - Create: `.cursor-plugin/marketplace.json`
 - Create: `.codex-plugin/plugin.json`
-- Create: `.gemini/extensions/devflow/gemini-extension.json`
+- Create: `.gemini/extensions/paadhai/gemini-extension.json`
 - Create: `CLAUDE.md`
 - Create: `AGENTS.md`
 - Create: `GEMINI.md`
@@ -1216,7 +1216,7 @@ Claude Code plugin manifest. Skills live at plugin root `skills/` (NOT inside `.
 
 ```json
 {
-  "name": "devflow",
+  "name": "paadhai",
   "version": "1.0.0",
   "description": "AI-native SDLC pipeline — 10 skills covering the full software development lifecycle",
   "author": { "name": "Paadhai Project" },
@@ -1242,8 +1242,8 @@ Claude Code plugin manifest. Skills live at plugin root `skills/` (NOT inside `.
 
 ```json
 {
-  "name": "devflow",
-  "display_name": "Devflow — AI SDLC Pipeline",
+  "name": "paadhai",
+  "display_name": "Paadhai — AI SDLC Pipeline",
   "description": "Complete software development lifecycle as AI agent skills. From repo init to production release.",
   "version": "1.0.0",
   "author": { "name": "Paadhai Project" },
@@ -1261,8 +1261,8 @@ Cursor 2.5+ plugin manifest. Uses same `SKILL.md` format. Can also include `.mdc
 
 ```json
 {
-  "name": "devflow",
-  "displayName": "Devflow — AI SDLC Pipeline",
+  "name": "paadhai",
+  "displayName": "Paadhai — AI SDLC Pipeline",
   "version": "1.0.0",
   "description": "AI-native SDLC pipeline — 10 skills covering the full software development lifecycle",
   "author": "Paadhai Project",
@@ -1277,8 +1277,8 @@ Cursor 2.5+ plugin manifest. Uses same `SKILL.md` format. Can also include `.mdc
 
 ```json
 {
-  "name": "devflow",
-  "display_name": "Devflow — AI SDLC Pipeline",
+  "name": "paadhai",
+  "display_name": "Paadhai — AI SDLC Pipeline",
   "description": "Complete software development lifecycle as AI agent skills.",
   "version": "1.0.0",
   "author": "Paadhai Project",
@@ -1294,7 +1294,7 @@ Codex CLI plugin manifest. Codex uses `.codex-plugin/plugin.json` + `skills/<nam
 
 ```json
 {
-  "name": "devflow",
+  "name": "paadhai",
   "version": "1.0.0",
   "description": "AI-native SDLC pipeline — 10 skills covering the full software development lifecycle",
   "author": "Paadhai Project",
@@ -1304,26 +1304,26 @@ Codex CLI plugin manifest. Codex uses `.codex-plugin/plugin.json` + `skills/<nam
 
 **Note:** Codex reads `AGENTS.md` at project root for instructions and `skills/<name>/SKILL.md` for skills. Config in `.codex/config.toml`.
 
-- [ ] **Step 6: Create `.gemini/extensions/devflow/gemini-extension.json`**
+- [ ] **Step 6: Create `.gemini/extensions/paadhai/gemini-extension.json`**
 
 Gemini CLI extension manifest. Gemini reads `GEMINI.md` as context file from the extension directory.
 
 ```json
 {
-  "name": "devflow",
+  "name": "paadhai",
   "version": "1.0.0",
   "contextFileName": "GEMINI.md"
 }
 ```
 
-**Note:** Copy `GEMINI.md` into `.gemini/extensions/devflow/` so Gemini loads it as extension context. The root `GEMINI.md` serves as the project-level context file.
+**Note:** Copy `GEMINI.md` into `.gemini/extensions/paadhai/` so Gemini loads it as extension context. The root `GEMINI.md` serves as the project-level context file.
 
 - [ ] **Step 7: Create `CLAUDE.md` instruction file**
 
 Claude Code reads this at session start. It is the ONLY platform that reads `CLAUDE.md`.
 
 ```markdown
-# Devflow — Claude Code
+# Paadhai — Claude Code
 
 Read `references/claude-tools.md` for capability marker → tool mappings.
 
@@ -1344,7 +1344,7 @@ Read `references/claude-tools.md` for capability marker → tool mappings.
 
 ## Config
 
-All skills read from `.devflow.json` at project root. Run `/project-init` to create it.
+All skills read from `.paadhai.json` at project root. Run `/project-init` to create it.
 ```
 
 - [ ] **Step 8: Create `AGENTS.md` universal instruction file**
@@ -1352,9 +1352,9 @@ All skills read from `.devflow.json` at project root. Run `/project-init` to cre
 This is the cross-platform instruction file read by **Cursor**, **Codex CLI**, and **OpenCode**. OpenCode prefers `AGENTS.md` over `CLAUDE.md`. Codex reads `AGENTS.md` natively.
 
 ```markdown
-# Devflow — AI Agent Instructions
+# Paadhai — AI Agent Instructions
 
-This file provides Devflow context to AI coding agents. It is read automatically by Cursor, Codex CLI, and OpenCode.
+This file provides Paadhai context to AI coding agents. It is read automatically by Cursor, Codex CLI, and OpenCode.
 
 ## Platform Detection
 
@@ -1380,7 +1380,7 @@ Detect your platform and load the correct reference file:
 
 ## Config
 
-All skills read from `.devflow.json` at project root. Run `/project-init` to create it.
+All skills read from `.paadhai.json` at project root. Run `/project-init` to create it.
 
 ## Fallback Behavior
 
@@ -1395,7 +1395,7 @@ If your platform does not support subagents:
 Gemini CLI reads this at session start (both from project root and from extension directory).
 
 ```markdown
-# Devflow — Gemini CLI
+# Paadhai — Gemini CLI
 
 Read `references/gemini-tools.md` for capability marker → tool mappings.
 
@@ -1416,7 +1416,7 @@ Read `references/gemini-tools.md` for capability marker → tool mappings.
 
 ## Config
 
-All skills read from `.devflow.json` at project root. Run `/project-init` to create it.
+All skills read from `.paadhai.json` at project root. Run `/project-init` to create it.
 
 ## Subagent Support
 
@@ -1430,7 +1430,7 @@ Gemini CLI has partial subagent support via extensions.
 - [ ] **Step 10: Copy GEMINI.md into extension directory**
 
 ```bash
-cp GEMINI.md .gemini/extensions/devflow/GEMINI.md
+cp GEMINI.md .gemini/extensions/paadhai/GEMINI.md
 ```
 
 - [ ] **Step 11: Commit all platform files**
@@ -1440,7 +1440,7 @@ git add .claude-plugin/ .cursor-plugin/ .codex-plugin/ .opencode/ .gemini/ CLAUD
 git commit -m "feat(platform): add plugin manifests and instruction files
 
 Claude Code (.claude-plugin/), Cursor (.cursor-plugin/), Codex CLI
-(.codex-plugin/), Gemini CLI (.gemini/extensions/devflow/).
+(.codex-plugin/), Gemini CLI (.gemini/extensions/paadhai/).
 CLAUDE.md for Claude Code, AGENTS.md for Cursor/Codex/OpenCode,
 GEMINI.md for Gemini CLI. Per SRS section 7."
 ```
@@ -1458,14 +1458,14 @@ GEMINI.md for Gemini CLI. Per SRS section 7."
 
 Structure:
 1. **Header**: Paadhai (பாதை) — AI-Native SDLC Pipeline
-2. **What is Devflow?**: One paragraph — 10 skills, full SDLC, works with Claude Code/Cursor/Codex/OpenCode/Gemini
+2. **What is Paadhai?**: One paragraph — 10 skills, full SDLC, works with Claude Code/Cursor/Codex/OpenCode/Gemini
 3. **Pipeline Overview**: ASCII diagram from SRS 2.2
 4. **Quick Start**: 
    - Prerequisites (git, gh, AI agent)
-   - Install per platform (Claude Code: `/plugin install devflow`, Cursor: marketplace, others: clone + copy)
+   - Install per platform (Claude Code: `/plugin install paadhai`, Cursor: marketplace, others: clone + copy)
    - First commands: `/project-init` → `/project-plan` → `/release-plan` → `/dev-start`
 5. **Skills Reference**: Table of all 10 skills with one-line description
-6. **Configuration**: `.devflow.json` schema overview
+6. **Configuration**: `.paadhai.json` schema overview
 7. **Platform Support**: Table showing which platforms support which capabilities
 8. **Contributing**: Link to CONTRIBUTING.md
 9. **License**: MIT
@@ -1509,8 +1509,8 @@ git commit -m "docs: add MIT license"
 Structure:
 1. **Welcome**: Brief intro to contributing
 2. **Getting Started**: Fork, clone, install prerequisites
-3. **Development Workflow**: Use Devflow itself (dogfooding) — `/dev-start`, `/dev-plan`, etc.
-4. **Skill File Format**: YAML frontmatter + markdown, capability markers, `.devflow.json` config references
+3. **Development Workflow**: Use Paadhai itself (dogfooding) — `/dev-start`, `/dev-plan`, etc.
+4. **Skill File Format**: YAML frontmatter + markdown, capability markers, `.paadhai.json` config references
 5. **Commit Convention**: conventional commits (feat, fix, test, chore, refactor, docs, perf)
 6. **Pull Request Process**: Branch from develop, PR to develop, CI must pass, audit required
 7. **Code of Conduct**: Standard contributor covenant reference
@@ -1571,7 +1571,7 @@ Expected: 2 files (srs.md, pr-body.md).
 ls -la .claude-plugin/plugin.json .claude-plugin/marketplace.json
 ls -la .cursor-plugin/plugin.json .cursor-plugin/marketplace.json
 ls -la .codex-plugin/plugin.json
-ls -la .gemini/extensions/devflow/gemini-extension.json .gemini/extensions/devflow/GEMINI.md
+ls -la .gemini/extensions/paadhai/gemini-extension.json .gemini/extensions/paadhai/GEMINI.md
 ls -la CLAUDE.md AGENTS.md GEMINI.md
 ```
 

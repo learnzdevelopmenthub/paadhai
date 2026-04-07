@@ -1,6 +1,6 @@
-# Devflow — AI Agent Instructions
+# Paadhai — AI Agent Instructions
 
-This file provides Devflow context to AI coding agents. It is read automatically by Cursor, Codex CLI, and OpenCode.
+This file provides Paadhai context to AI coding agents. It is read automatically by Cursor, Codex CLI, and OpenCode.
 
 ## Platform Detection
 
@@ -26,7 +26,7 @@ Detect your platform and load the correct reference file:
 
 ## Config
 
-All skills read from `.devflow.json` at project root. Run `/project-init` to create it.
+All skills read from `.paadhai.json` at project root. Run `/project-init` to create it.
 
 ## Fallback Behavior
 
