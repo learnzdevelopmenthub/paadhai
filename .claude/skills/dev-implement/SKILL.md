@@ -87,7 +87,7 @@ git status
 
 ## STEP 6 — Route Execution
 
-- **Subagent-driven** → hand off to `superpowers:subagent-driven-development`. Pass the full implementation doc as context.
+- **Subagent-driven** → hand off to `/dev-parallel`. Pass the issue number as context.
 - **Sequential** → continue to Step 7
 
 ---
@@ -103,7 +103,8 @@ For each `pending` step in the implementation doc:
 [DELEGATE] Execute the step (model per user choice in Step 2). Follow the exact command/code in the implementation doc.
 
 ### 7c — Code Review
-[DELEGATE][SMART-MODEL] Review changes. Check:
+[READ] `code-reviewer-prompt.md` — load review criteria.
+[DELEGATE][SMART-MODEL] Review changes using the loaded reviewer prompt. Check:
 - Correctness
 - Pattern alignment with existing code
 - No introduced bugs or security issues

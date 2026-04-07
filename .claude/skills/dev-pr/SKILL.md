@@ -107,7 +107,8 @@ Next step: run /dev-audit to review the PR.
 ```
 
 If any check fails:
-1. [DELEGATE][SMART-MODEL] Analyze failure logs:
+1. [READ] `ci-analyzer-prompt.md` — load CI analysis criteria.
+2. [DELEGATE][SMART-MODEL] Analyze failure logs using the loaded analyzer prompt:
    ```bash
    gh run view <run-id> --log-failed
    ```

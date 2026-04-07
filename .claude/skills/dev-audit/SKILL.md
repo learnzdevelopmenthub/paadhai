@@ -49,7 +49,9 @@ git diff origin/{config.repo.develop_branch}..HEAD -- . ':!docs/plans/'
 
 ## STEP 4 — Run Three Reviews
 
-[PARALLEL][SMART-MODEL] Run all three reviews simultaneously:
+[READ] `reviewer-prompt.md` — load review criteria for all three dimensions.
+
+[PARALLEL][SMART-MODEL] Run all three reviews simultaneously, using the loaded reviewer prompt:
 
 ### 4a — Architecture Review
 

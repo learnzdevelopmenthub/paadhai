@@ -1,7 +1,7 @@
 {
   "name": "paadhai",
   "version": "1.0.0",
-  "description": "AI-native SDLC pipeline — 10 skills covering the full software development lifecycle",
+  "description": "AI-native SDLC pipeline — 16 skills covering the full software development lifecycle",
   "author": { "name": "Paadhai Project" },
   "license": "MIT",
   "skills": [
@@ -14,6 +14,12 @@
     { "name": "dev-pr", "path": "skills/dev-pr/SKILL.md" },
     { "name": "dev-audit", "path": "skills/dev-audit/SKILL.md" },
     { "name": "dev-ship", "path": "skills/dev-ship/SKILL.md" },
-    { "name": "dev-release", "path": "skills/dev-release/SKILL.md" }
+    { "name": "dev-parallel", "path": "skills/dev-parallel/SKILL.md" },
+    { "name": "dev-debug", "path": "skills/dev-debug/SKILL.md" },
+    { "name": "dev-unblock", "path": "skills/dev-unblock/SKILL.md" },
+    { "name": "dev-release", "path": "skills/dev-release/SKILL.md" },
+    { "name": "dev-rollback", "path": "skills/dev-rollback/SKILL.md" },
+    { "name": "dev-status", "path": "skills/dev-status/SKILL.md" },
+    { "name": "paadhai-skill", "path": "skills/paadhai-skill/SKILL.md" }
   ]
 }

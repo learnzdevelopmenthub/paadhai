@@ -204,7 +204,9 @@ Must reflect version validation findings from Step 7.
 
 ## STEP 13 — Review Implementation Doc
 
-[DELEGATE][SMART-MODEL] Review the implementation doc. Reviewer checks:
+[READ] `implementation-reviewer-prompt.md` — load review criteria.
+
+[DELEGATE][SMART-MODEL] Review the implementation doc using the loaded reviewer prompt. Reviewer checks:
 - All steps complete with exact commands?
 - File contents missing anywhere?
 - Technical errors?
