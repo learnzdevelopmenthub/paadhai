@@ -212,7 +212,22 @@ gh release create <version> \
 
 ---
 
-## STEP 11 — Display Release URL
+## STEP 11 — Close Milestone
+
+[SHELL] Close the milestone for this release:
+```bash
+MILESTONE_NUMBER=$(gh api "repos/{config.repo.owner}/{config.repo.name}/milestones?state=open" \
+  --jq '.[] | select(.title == "<milestone-title>") | .number')
+gh api "repos/{config.repo.owner}/{config.repo.name}/milestones/$MILESTONE_NUMBER" \
+  --method PATCH --field state=closed
+```
+
+If milestone not found or already closed → warn and continue:
+> Milestone "<milestone-title>" not found or already closed. Skipping.
+
+---
+
+## STEP 12 — Display Release URL
 
 ```
 ✓ Release published: <release-url>
@@ -221,11 +236,40 @@ Version  : <version>
 Tag      : <version>
 Branch   : {config.repo.main_branch}
 Notes    : from CHANGELOG.md
+Milestone: <milestone-title> closed
 ```
 
 ---
 
-## STEP 12 — Next Milestone
+## STEP 13 — Post-Release Health Check
+
+[SHELL] Check CI status on main:
+```bash
+gh run list --branch {config.repo.main_branch} --limit 1 --json status,conclusion,name \
+  --jq '.[] | "\(.name): \(.status) / \(.conclusion)"'
+```
+
+[SHELL] Check for new issues filed in the last hour:
+```bash
+gh api "repos/{config.repo.owner}/{config.repo.name}/issues?state=open&sort=created&direction=desc&per_page=10" \
+  --jq '[.[] | select(.created_at > (now - 3600 | todate))] | length'
+```
+
+Display health report:
+```
+Post-Release Health Check
+═══════════════════════════
+CI on main   : <passing / failing / in-progress>
+New issues   : <count> filed in the last hour
+Signal       : <NONE / WARNING>
+```
+
+If CI is failing or 3+ new issues filed in the last hour:
+> WARNING: Post-release signals suggest a problem. Consider running /dev-rollback if issues are critical.
+
+---
+
+## STEP 14 — Next Milestone
 
 [SHELL] Show open issues for next milestone:
 ```bash

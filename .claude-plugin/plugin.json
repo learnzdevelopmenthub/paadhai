@@ -1,7 +1,7 @@
 {
   "name": "paadhai",
   "version": "1.0.0",
-  "description": "AI-native SDLC pipeline — 16 skills covering the full software development lifecycle",
+  "description": "AI-native SDLC pipeline — 21 skills covering the full software development lifecycle",
   "author": { "name": "Paadhai Project" },
   "license": "MIT",
   "skills": [
@@ -10,6 +10,7 @@
     { "name": "release-plan", "path": "skills/release-plan/SKILL.md" },
     { "name": "dev-start", "path": "skills/dev-start/SKILL.md" },
     { "name": "dev-plan", "path": "skills/dev-plan/SKILL.md" },
+    { "name": "dev-test", "path": "skills/dev-test/SKILL.md" },
     { "name": "dev-implement", "path": "skills/dev-implement/SKILL.md" },
     { "name": "dev-pr", "path": "skills/dev-pr/SKILL.md" },
     { "name": "dev-audit", "path": "skills/dev-audit/SKILL.md" },
@@ -19,7 +20,11 @@
     { "name": "dev-unblock", "path": "skills/dev-unblock/SKILL.md" },
     { "name": "dev-release", "path": "skills/dev-release/SKILL.md" },
     { "name": "dev-rollback", "path": "skills/dev-rollback/SKILL.md" },
+    { "name": "dev-hotfix", "path": "skills/dev-hotfix/SKILL.md" },
     { "name": "dev-status", "path": "skills/dev-status/SKILL.md" },
+    { "name": "dev-deps", "path": "skills/dev-deps/SKILL.md" },
+    { "name": "dev-docs", "path": "skills/dev-docs/SKILL.md" },
+    { "name": "dev-adr", "path": "skills/dev-adr/SKILL.md" },
     { "name": "paadhai-skill", "path": "skills/paadhai-skill/SKILL.md" }
   ]
 }

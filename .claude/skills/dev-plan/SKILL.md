@@ -1,11 +1,11 @@
 ---
 name: dev-plan
-description: Use when planning GitHub issues — brainstorm, design review, version validation, generate plan + implementation doc
+description: Use when planning GitHub issues — brainstorm, design review, security assessment, version validation, generate plan + implementation doc
 ---
 
 # dev-plan: Issue Planning
 
-Brainstorm, design review, version validation, generate plan + implementation doc for an issue.
+Brainstorm, design review, security assessment, version validation, generate plan + implementation doc for an issue.
 
 **Output:** `docs/plans/issue-<n>/plan.md` + `docs/plans/issue-<n>/implementation.md`
 
@@ -91,9 +91,59 @@ Always ask:
 
 Note findings for the plan.
 
+### Step 6b — ADR Check
+
+If the design review identifies any of the following → flag for ADR:
+- New technology choice or library adoption
+- Architectural pattern decision (e.g., event-driven vs. request/response)
+- Significant tradeoff with long-term consequences
+- Breaking change to existing interfaces or contracts
+
+Ask user: "This issue involves an architectural decision. Generate an ADR? (yes/no)"
+- **yes** → after plan is saved (Step 12), invoke `/dev-adr` with the decision context
+- **no** → note "ADR: declined" in the plan
+
 ---
 
-## STEP 7 — Version Validation
+## STEP 7 — Security Threat Assessment
+
+[DELEGATE][SMART-MODEL] Perform a threat model based on issue labels and design findings:
+
+**Label-based checks:**
+- `api` → injection vulnerabilities (SQLi, XSS, command injection), authentication bypass, rate limiting, versioning exposure
+- `db` → SQL injection, privilege escalation, data exposure in error messages
+- `auth` → token handling, session fixation, privilege escalation, insecure storage
+- `infra` → secrets/credentials exposure, insecure configuration, network exposure
+
+**General checks (always run):**
+- Input validation boundaries
+- Error message information leakage
+- Dependency trust (new packages being added)
+- Authorization checks on new endpoints/actions
+
+**Output format:**
+```
+## Security Considerations
+
+### Attack Surfaces
+- <surface>: <risk level> — <description>
+
+### Mitigations
+- <mitigation description>
+
+### Security Checklist
+- [ ] Input validated at all entry points
+- [ ] No sensitive data in error messages
+- [ ] Authorization checked before data access
+- [ ] <issue-specific items>
+```
+
+If no security-relevant attack surfaces are identified → output:
+> No security-relevant attack surfaces identified for this issue.
+
+---
+
+## STEP 8 — Version Validation
 
 [DELEGATE][FAST-MODEL][SEARCH] Check current stable versions of core packages used in this issue. Verify:
 - Breaking changes since current version
@@ -104,7 +154,7 @@ Skip for well-known stable APIs (e.g., standard library functions).
 
 ---
 
-## STEP 8 — Generate Plan
+## STEP 9 — Generate Plan
 
 Create a structured plan:
 
@@ -129,6 +179,9 @@ Create a structured plan:
 - Edge case: <describe>
 - Error case: <describe>
 
+## Security Considerations
+<security checklist from Step 7, or "No security-relevant attack surfaces identified">
+
 ## AC Mapping
 | AC | How Addressed |
 |----|--------------|
@@ -148,7 +201,7 @@ Create a structured plan:
 
 ---
 
-## STEP 9 — Present Plan
+## STEP 10 — Present Plan
 
 Show the full plan.
 
@@ -158,15 +211,15 @@ Wait for explicit approval.
 
 ---
 
-## STEP 10 — Confirmation Loop
+## STEP 11 — Confirmation Loop
 
-- **Approved** → proceed to Step 11
-- **Changes requested** → update plan → re-present (repeat Step 9)
+- **Approved** → proceed to Step 12
+- **Changes requested** → update plan → re-present (repeat Step 10)
 - **Question** → answer → update if needed → re-present
 
 ---
 
-## STEP 11 — Save Plan
+## STEP 12 — Save Plan
 
 [WRITE] Save to `docs/plans/issue-<n>/plan.md`:
 
@@ -183,9 +236,11 @@ confirmed_at: <timestamp>
 
 Followed by full plan content.
 
+If Step 6b ADR was approved → invoke `/dev-adr` now with the architectural decision context.
+
 ---
 
-## STEP 12 — Generate Implementation Doc
+## STEP 13 — Generate Implementation Doc
 
 [WRITE] Create `docs/plans/issue-<n>/implementation.md`:
 
@@ -198,11 +253,11 @@ Include:
 - Progress table at top (Step | Description | Status)
 - Deviations section at bottom (empty initially)
 
-Must reflect version validation findings from Step 7.
+Must reflect version validation findings from Step 8.
 
 ---
 
-## STEP 13 — Review Implementation Doc
+## STEP 14 — Review Implementation Doc
 
 [READ] `implementation-reviewer-prompt.md` — load review criteria.
 
@@ -217,7 +272,7 @@ Must reflect version validation findings from Step 7.
 
 ---
 
-## STEP 14 — User Confirms Implementation Doc
+## STEP 15 — User Confirms Implementation Doc
 
 Present the implementation doc.
 
@@ -227,7 +282,7 @@ Wait for explicit confirmation.
 
 ---
 
-## STEP 15 — Commit
+## STEP 16 — Commit
 
 [SHELL] Commit plan + implementation doc:
 ```bash
@@ -241,10 +296,10 @@ Refs #<n>"
 
 ---
 
-## STEP 16 — Handoff
+## STEP 17 — Handoff
 
 ```
-Planning complete. Next step: run /dev-implement.
+Planning complete. Next step: run /dev-test to create the test plan and stubs.
 
 Issue       : #<number> <title>
 Plan        : docs/plans/issue-<n>/plan.md

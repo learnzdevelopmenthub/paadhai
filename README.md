@@ -1,143 +1,269 @@
 # Paadhai (பாதை)
 
-**AI-Native SDLC Pipeline**
+> **AI-native SDLC pipeline** — 21 skills covering every stage of software development, from project setup through production release.
 
-## What is Paadhai?
+Paadhai (Tamil for *path*) is a structured collection of AI agent skills that guide you through the entire software development lifecycle. Each skill is a self-contained workflow that knows where it fits in the pipeline, what to do, and what comes next — so your AI agent never improvises where consistency matters.
 
-Paadhai is an AI-native software development lifecycle (SDLC) pipeline consisting of 10 integrated skills that guide you from project initialization through shipping and releasing. It works with Claude Code, Cursor, Codex CLI, OpenCode, and Gemini CLI, providing a consistent, config-driven workflow powered by AI agents.
+Works with **Claude Code**, **Cursor**, **Codex CLI**, **OpenCode**, and **Gemini CLI**.
 
-The pipeline is built around a core configuration file (`.paadhai.json`) that captures your project structure, tech stack, and GitHub settings. Each skill is a self-contained agent that builds on the work of previous skills, orchestrating the entire development workflow from planning through release.
+---
 
-## Pipeline Overview
+## How it works
+
+Every project starts with a single config file (`.paadhai.json`) that captures your repo, stack, and branching strategy. Every skill reads from this file — no hardcoded values, no repeated setup.
+
+The skills are organized into four pipelines:
 
 ```
-/project-init → /project-plan → /release-plan
-                                      ↓
-/dev-release ← /dev-ship ← /dev-audit ← /dev-pr ← /dev-implement ← /dev-plan ← /dev-start
+SETUP (once per project)
+  /project-init → /project-plan → /release-plan
+
+DEV LOOP (once per issue/feature)
+  /dev-start → /dev-plan → /dev-test → /dev-implement → /dev-pr → /dev-audit → /dev-ship
+
+RELEASE (once per version)
+  /dev-release
+
+EMERGENCY (for production incidents)
+  /dev-hotfix → /dev-pr → /dev-audit → /dev-ship → /dev-release
 ```
+
+Support skills (`/dev-debug`, `/dev-unblock`, `/dev-deps`, `/dev-docs`, `/dev-adr`, `/dev-status`, `/dev-rollback`, `/dev-parallel`) run independently at any point.
+
+---
 
 ## Prerequisites
 
-- **git** (2.x+) — version control
-- **gh** (GitHub CLI, 2.x+) — authenticated with `gh auth login`
-- **Any supported AI agent** — Claude Code, Cursor, Codex CLI, OpenCode, or Gemini CLI
+| Tool | Version | Purpose |
+|------|---------|---------|
+| `git` | 2.x+ | Version control |
+| `gh` | 2.x+ | GitHub CLI — run `gh auth login` before first use |
+| AI agent | — | Claude Code, Cursor, Codex CLI, OpenCode, or Gemini CLI |
+
+---
 
 ## Installation
 
 ### Claude Code
-
 ```bash
 /plugin install paadhai
 ```
 
-Or manually clone the repository and copy skills:
-
+Or manually:
 ```bash
 git clone https://github.com/paadhai/paadhai.git
 cp -r paadhai/.claude/skills/* ~/.claude/skills/
 ```
 
 ### Cursor
-
-Search for "Paadhai" in the Cursor plugin marketplace, or manually install by cloning the repository and copying into `.cursor-plugins/`:
-
+Search "Paadhai" in the Cursor plugin marketplace, or:
 ```bash
 git clone https://github.com/paadhai/paadhai.git
 cp -r paadhai/.cursor-plugins/paadhai/ ~/.cursor-plugins/
 ```
 
-### Codex CLI
-
-Clone the repository and copy the agent configuration:
-
+### Codex CLI / OpenCode
 ```bash
 git clone https://github.com/paadhai/paadhai.git
 cp -r paadhai/.codex-plugin/ your-project/
 cp paadhai/AGENTS.md your-project/
 ```
 
-### OpenCode
-
-Clone the repository and copy the agent configuration:
-
-```bash
-git clone https://github.com/paadhai/paadhai.git
-cp -r paadhai/.opencode/ your-project/
-cp paadhai/AGENTS.md your-project/
-```
-
 ### Gemini CLI
-
 ```bash
 gemini extensions install paadhai
 ```
 
-Or manually copy:
-
-```bash
-git clone https://github.com/paadhai/paadhai.git
-cp -r paadhai/.gemini/extensions/paadhai/ ~/.gemini/extensions/
-```
+---
 
 ## Quick Start
 
-Follow these steps to get started with a new or existing project:
-
 ```bash
-/project-init    → set up your GitHub repo + write .paadhai.json
-/project-plan    → define requirements (generates docs/srs.md)
-/release-plan    → create milestones + issues on GitHub
-/dev-start #1    → create feature branch for issue #1
-/dev-plan        → brainstorm + generate implementation doc
-/dev-implement   → execute the plan step by step
-/dev-pr          → push branch + open PR + poll CI
-/dev-audit       → three-dimension code review
-/dev-ship        → merge PR + update board
-/dev-release     → tag + publish GitHub Release
+# 1. Set up your project (once)
+/project-init     # creates .paadhai.json, optionally sets branch protection
+/project-plan     # generates docs/srs.md from your product idea
+/release-plan     # creates GitHub milestones + issues
+
+# 2. Start a feature (per issue)
+/dev-start #1     # creates branch feature/1-my-feature
+/dev-plan         # security analysis, design review, implementation plan
+/dev-test         # test plan + stubs from acceptance criteria
+/dev-implement    # execute the plan step by step
+/dev-pr           # push branch, open PR (auto-labeled), poll CI
+/dev-audit        # architecture + security + compatibility review
+/dev-ship         # merge PR, update board, clean up branch
+
+# 3. Release
+/dev-release      # tag version, publish release, close milestone, health check
 ```
+
+---
 
 ## Skills Reference
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| Project Init | `/project-init` | Set up new or existing project with GitHub configuration |
-| Project Plan | `/project-plan` | Generate Software Requirements Specification from product idea |
-| Release Plan | `/release-plan` | Create GitHub milestones and issues for release |
-| Dev Start | `/dev-start` | Pick an issue and create a feature branch |
-| Dev Plan | `/dev-plan` | Brainstorm, plan, and generate implementation documentation |
-| Dev Implement | `/dev-implement` | Execute implementation step by step |
-| Dev PR | `/dev-pr` | Push branch, open pull request, and poll CI status |
-| Dev Audit | `/dev-audit` | Perform architecture, security, and compatibility review |
-| Dev Ship | `/dev-ship` | Merge PR, update GitHub board, and clean up |
-| Dev Release | `/dev-release` | Tag version, publish GitHub Release, and back-merge |
+### Setup Pipeline
+
+Run these once when starting a new project.
+
+| Command | What it does | Output |
+|---------|-------------|--------|
+| `/project-init` | Initialize `.paadhai.json`, connect GitHub repo, optionally enable branch protection | `.paadhai.json` |
+| `/project-plan` | Generate a Software Requirements Specification from your product description | `docs/srs.md` |
+| `/release-plan` | Create GitHub milestones and issues from your SRS | GitHub milestones + issues |
+
+---
+
+### Dev Loop
+
+Run this sequence for every issue or feature. Each skill hands off to the next.
+
+| Command | What it does | Output |
+|---------|-------------|--------|
+| `/dev-start` | Pick a GitHub issue, create a feature branch | Git branch |
+| `/dev-plan` | Brainstorm approach, security threat assessment, design review, implementation plan | `docs/plans/issue-<n>/plan.md` + `implementation.md` |
+| `/dev-test` | Generate test plan from acceptance criteria + write test stubs | `docs/plans/issue-<n>/test-plan.md` + test files |
+| `/dev-implement` | Execute the implementation plan step by step | Code changes |
+| `/dev-pr` | Push branch, open PR (inherits issue labels), poll CI | GitHub PR |
+| `/dev-audit` | 3-dimension review: architecture, security, compatibility | Audit report |
+| `/dev-ship` | Merge PR after audit approval, close issue, clean up branch | Merged PR |
+
+**The pipeline in detail:**
+
+```
+/dev-start
+    ↓  creates branch
+/dev-plan
+    ↓  plan.md + implementation.md
+    ↓  security threat model injected automatically
+    ↓  prompts for ADR if architectural decision detected
+/dev-test
+    ↓  test-plan.md + test stubs (compile-verified)
+/dev-implement
+    ↓  code changes
+/dev-pr
+    ↓  PR opened with issue labels copied automatically
+/dev-audit
+    ↓  review pass
+/dev-ship
+    ↓  merged + board updated
+```
+
+---
+
+### Release
+
+| Command | What it does | Output |
+|---------|-------------|--------|
+| `/dev-release` | Tag version, generate changelog, publish GitHub Release, close milestone, run post-release health check | GitHub Release + closed milestone |
+
+The health check after release inspects CI status and new issues. If anything looks wrong, it surfaces a `/dev-rollback` signal before you move on.
+
+---
+
+### Emergency Pipeline
+
+For urgent production issues that can't wait for the normal dev loop.
+
+| Command | What it does | Output |
+|---------|-------------|--------|
+| `/dev-hotfix` | Branch from main, implement minimal fix, open PR directly to main | Hotfix PR to main |
+| `/dev-rollback` | Recover from a bad release — revert tags, redeploy previous version | Rollback + incident notes |
+
+**Hotfix flow:**
+```
+/dev-hotfix → /dev-pr → /dev-audit → /dev-ship → /dev-release
+                                                      ↓
+                                          back-merge main → develop
+```
+
+---
+
+### Support Skills
+
+Run any of these at any point in the pipeline, standalone.
+
+| Command | When to use |
+|---------|------------|
+| `/dev-debug` | Something is broken and you don't know why — 4-phase systematic debug |
+| `/dev-unblock` | CI is failing or there's a merge conflict blocking your PR |
+| `/dev-parallel` | You have multiple independent issues to work — dispatches parallel subagents |
+| `/dev-deps` | Audit dependencies for CVEs, license issues, and outdated packages |
+| `/dev-docs` | Generate API reference, user guide, or architecture overview from the codebase |
+| `/dev-adr` | Record an Architecture Decision Record for a significant design choice |
+| `/dev-status` | Read-only dashboard — see open issues, PRs, CI status, milestone progress |
+
+---
+
+### Meta
+
+| Command | What it does |
+|---------|-------------|
+| `/paadhai-skill` | Scaffold a new Paadhai skill with correct structure and register it |
+
+---
 
 ## Configuration (`.paadhai.json`)
 
-The `.paadhai.json` file is automatically created by `/project-init` and contains the core configuration for your project:
+Created automatically by `/project-init`. Every skill reads from this file.
 
 | Key | Description |
 |-----|-------------|
-| `version` | Paadhai configuration schema version |
-| `repo` | Repository name, owner, and local path |
-| `github` | GitHub API settings and authentication |
-| `stack` | Tech stack, languages, and framework information |
-| `branches` | Main, develop, and staging branch names |
+| `version` | Paadhai config schema version |
+| `repo.owner` | GitHub username or org |
+| `repo.name` | Repository name |
+| `repo.main_branch` | Production branch (e.g. `main`) |
+| `repo.develop_branch` | Integration branch (e.g. `develop`) |
+| `branches.feature` | Feature branch prefix (e.g. `feature/`) |
+| `branches.fix` | Fix branch prefix (e.g. `fix/`) |
+| `stack.language` | Primary language (e.g. `typescript`, `python`) |
+| `stack.build_cmd` | Build command (e.g. `npm run build`) |
+| `stack.lint_cmd` | Lint command (e.g. `npm run lint`) |
+| `stack.test_cmd` | Test command (e.g. `npm test`) |
 
-The `/project-init` skill will guide you through creating this file with sensible defaults for your project.
+---
+
+## Decision Guide
+
+**Not sure which skill to use?**
+
+| Situation | Skill |
+|-----------|-------|
+| Starting a brand-new project | `/project-init` → `/project-plan` → `/release-plan` |
+| Starting work on an issue | `/dev-start` |
+| Need a plan before writing code | `/dev-plan` |
+| Ready to write tests | `/dev-test` |
+| Ready to write code | `/dev-implement` |
+| Ready to open a PR | `/dev-pr` |
+| PR needs a code review | `/dev-audit` |
+| PR is approved, ready to merge | `/dev-ship` |
+| Ready to tag a release | `/dev-release` |
+| Production is broken right now | `/dev-hotfix` |
+| A release introduced a regression | `/dev-rollback` |
+| Something is broken, unknown cause | `/dev-debug` |
+| CI is failing or there's a conflict | `/dev-unblock` |
+| Need to check project health | `/dev-status` |
+| Dependencies have CVEs or are outdated | `/dev-deps` |
+| Need to write or update docs | `/dev-docs` |
+| Making a significant architectural decision | `/dev-adr` |
+| Multiple independent tasks in parallel | `/dev-parallel` |
+
+---
 
 ## Platform Support
 
 | Feature | Claude Code | Cursor | Codex CLI | OpenCode | Gemini CLI |
-|---------|------------|--------|-----------|----------|------------|
-| All 10 skills | ✓ | ✓ | ✓ | ✓ | ✓ |
+|---------|:-----------:|:------:|:---------:|:--------:|:----------:|
+| All 21 skills | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Subagent dispatch | ✓ | Partial | ✗ | ✗ | Partial |
 | Parallel execution | ✓ | Sequential | Sequential | Sequential | Partial |
 | Model selection | ✓ | ✗ | ✗ | ✗ | ✓ |
 
+---
+
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to Paadhai.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-Paadhai is released under the MIT License. See [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE).

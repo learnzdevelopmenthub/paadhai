@@ -191,18 +191,52 @@ git push -u origin develop
 
 ---
 
-## STEP 7 — Display Results
+## STEP 7 — Branch Protection (Optional)
+
+**G-16: "Enable branch protection rules on main and develop? (yes/skip)"**
+
+If **skip** → proceed to Step 8.
+
+If **yes** → apply protection via GitHub API:
+
+[SHELL] Protect `{config.repo.main_branch}` (require PR review + CI, no force push):
+```bash
+gh api "repos/{config.repo.owner}/{config.repo.name}/branches/{config.repo.main_branch}/protection" \
+  --method PUT \
+  --field required_status_checks='{"strict":true,"contexts":[]}' \
+  --field enforce_admins=false \
+  --field required_pull_request_reviews='{"required_approving_review_count":1}' \
+  --field restrictions=null
+```
+
+[SHELL] Protect `{config.repo.develop_branch}` (require CI, no force push):
+```bash
+gh api "repos/{config.repo.owner}/{config.repo.name}/branches/{config.repo.develop_branch}/protection" \
+  --method PUT \
+  --field required_status_checks='{"strict":true,"contexts":[]}' \
+  --field enforce_admins=false \
+  --field required_pull_request_reviews=null \
+  --field restrictions=null
+```
+
+If either API call fails (e.g., free-plan repository limitation) → warn and skip gracefully:
+> Branch protection requires a paid GitHub plan for private repos. Skipping.
+
+---
+
+## STEP 8 — Display Results
 
 ```
 ✓ Repo          : https://github.com/{owner}/{repo-name}
 ✓ .paadhai.json : written
 ✓ develop       : pushed to origin
 ✓ Project board : {board-url}
+✓ Branch protection: <enabled / skipped>
 ```
 
 ---
 
-## STEP 8 — Smart Handoff
+## STEP 9 — Smart Handoff
 
 - **New project, no SRS** → "Run /project-plan to define your requirements."
 - **Existing project, no SRS** → "Run /project-plan to create the SRS."

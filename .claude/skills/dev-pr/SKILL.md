@@ -58,13 +58,23 @@ Closes #<issue-number>
 
 ## STEP 4 — Create PR
 
+[SHELL] Fetch issue labels to apply to PR:
+```bash
+ISSUE_LABELS=$(gh api "repos/{config.repo.owner}/{config.repo.name}/issues/<issue-number>" \
+  --jq '[.labels[].name] | join(",")')
+```
+
 [SHELL] Create pull request:
 ```bash
 gh pr create \
   --base {config.repo.develop_branch} \
   --title "<conventional-commit-style title>" \
-  --body "<pr-body-from-step-3>"
+  --body "<pr-body-from-step-3>" \
+  --label "$ISSUE_LABELS"
 ```
+
+If `--label` fails (e.g., label does not exist on repo) → retry without `--label` and warn:
+> Could not apply labels to PR. Labels from issue: <labels>. Apply manually if needed.
 
 PR title format: `<type>(<scope>): <subject>` (same convention as commits).
 

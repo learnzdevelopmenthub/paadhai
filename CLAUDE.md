@@ -11,6 +11,7 @@ Read `references/claude-tools.md` for capability marker → tool mappings.
 | `/release-plan` | Create milestones + issues on GitHub |
 | `/dev-start` | Pick issue, create branch |
 | `/dev-plan` | Brainstorm + plan + impl doc |
+| `/dev-test` | Generate test plan + stubs from ACs |
 | `/dev-implement` | Execute implementation step by step |
 | `/dev-pr` | Push branch, open PR, poll CI |
 | `/dev-audit` | Architecture + security + compatibility review |
@@ -20,7 +21,11 @@ Read `references/claude-tools.md` for capability marker → tool mappings.
 | `/dev-unblock` | Fix CI failures and merge conflicts |
 | `/dev-release` | Tag, changelog, release, back-merge |
 | `/dev-rollback` | Recover from bad releases |
+| `/dev-hotfix` | Fast-path for urgent production fixes |
 | `/dev-status` | Read-only project progress dashboard |
+| `/dev-deps` | Dependency audit: CVEs, licenses, outdated |
+| `/dev-docs` | Generate API, user, architecture docs |
+| `/dev-adr` | Record Architecture Decision Records |
 | `/paadhai-skill` | Scaffold and register new skills |
 
 ## Config
