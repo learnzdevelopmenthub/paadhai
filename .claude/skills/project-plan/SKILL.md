@@ -91,13 +91,12 @@ Wait for explicit approval.
 
 - **Approved** → proceed to Step 9
 - **Changes requested** → apply changes → re-present full SRS → repeat G-02
-- **Question** → answer → update if needed → re-present
 
 ---
 
 ## STEP 9 — Save
 
-[DELEGATE][FAST-MODEL] [WRITE] Save SRS to `docs/srs.md`.
+[WRITE] Save SRS to `docs/srs.md`.
 
 [SHELL] Commit:
 ```bash
