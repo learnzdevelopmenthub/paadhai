@@ -1,0 +1,19 @@
+{
+  "name": "devflow",
+  "version": "1.0.0",
+  "description": "AI-native SDLC pipeline — 10 skills covering the full software development lifecycle",
+  "author": { "name": "Paadhai Project" },
+  "license": "MIT",
+  "skills": [
+    { "name": "project-init", "path": "skills/project-init/SKILL.md" },
+    { "name": "project-plan", "path": "skills/project-plan/SKILL.md" },
+    { "name": "release-plan", "path": "skills/release-plan/SKILL.md" },
+    { "name": "dev-start", "path": "skills/dev-start/SKILL.md" },
+    { "name": "dev-plan", "path": "skills/dev-plan/SKILL.md" },
+    { "name": "dev-implement", "path": "skills/dev-implement/SKILL.md" },
+    { "name": "dev-pr", "path": "skills/dev-pr/SKILL.md" },
+    { "name": "dev-audit", "path": "skills/dev-audit/SKILL.md" },
+    { "name": "dev-ship", "path": "skills/dev-ship/SKILL.md" },
+    { "name": "dev-release", "path": "skills/dev-release/SKILL.md" }
+  ]
+}
