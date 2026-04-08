@@ -5,7 +5,10 @@
   "version": "1.0.0",
   "author": { "name": "Paadhai Project" },
   "license": "MIT",
-  "source": ".",
+  "source": {
+    "source": "github",
+    "repo": "learnzdevelopmenthub/paadhai"
+  },
   "category": "Development Workflow",
   "tags": ["sdlc", "devops", "github", "workflow", "ai-agent"],
   "keywords": ["sdlc", "devops", "github", "workflow", "ai-agent"]
