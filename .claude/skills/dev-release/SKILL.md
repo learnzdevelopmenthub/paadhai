@@ -21,9 +21,38 @@ Store:
 - `{config.branches.release}`
 - `{config.stack.build_cmd}` / `{config.stack.lint_cmd}` / `{config.stack.test_cmd}`
 
+### Progress Tracking
+
+[PROGRESS] Initialize TodoWrite checklist — 14 items, all `pending`:
+```
+Step 1/14: Load Config
+Step 2/14: Verify Milestone Completion
+Step 3/14: Ask Version
+Step 4/14: Prepare Release Branch
+Step 5/14: Run Full Test Suite
+Step 6/14: Generate Changelog
+Step 7/14: Push + Create Release PR
+Step 8/14: Display Release PR URL
+Step 9/14: Final Confirmation
+Step 10/14: Execute Release (after G-10)
+Step 11/14: Close Milestone
+Step 12/14: Display Release URL
+Step 13/14: Post-Release Health Check
+Step 14/14: Next Milestone
+```
+(Graceful degradation: skip if TodoWrite unavailable)
+
+[PROGRESS] Mark Step 1/14 `completed`:
+```
+Step 1/14: Load Config [completed]
+Files read: .paadhai.json
+```
+
 ---
 
 ## STEP 2 — Verify Milestone Completion
+
+[PROGRESS] Mark Step 2/14 `in_progress`: `Step 2/14: Verify Milestone Completion [in_progress]`
 
 [SHELL] Check open issues in the current milestone:
 ```bash
@@ -40,9 +69,14 @@ Open issues:
 
 If all closed → proceed.
 
+[PROGRESS] Mark Step 2/14 `completed`: `Step 2/14: Verify Milestone Completion [completed]`
+`Milestone verified: all issues closed`
+
 ---
 
 ## STEP 3 — Ask Version
+
+[PROGRESS] Mark Step 3/14 `in_progress`: `Step 3/14: Ask Version [in_progress]`
 
 Ask user:
 > "What version number for this release? (e.g., v0.1.0)"
@@ -52,9 +86,14 @@ Validate format: must match `v\d+\.\d+\.\d+` or similar semantic version.
 Ask user:
 > "What is the milestone title for this release? (e.g., v0.1 — Core)"
 
+[PROGRESS] Mark Step 3/14 `completed`: `Step 3/14: Ask Version [completed]`
+`Version confirmed`
+
 ---
 
 ## STEP 4 — Prepare Release Branch
+
+[PROGRESS] Mark Step 4/14 `in_progress`: `Step 4/14: Prepare Release Branch [in_progress]`
 
 [SHELL] Switch to develop and pull:
 ```bash
@@ -68,9 +107,14 @@ git checkout -b {config.branches.release}<version>
 git push -u origin {config.branches.release}<version>
 ```
 
+[PROGRESS] Mark Step 4/14 `completed`: `Step 4/14: Prepare Release Branch [completed]`
+`Release branch created and pushed`
+
 ---
 
 ## STEP 5 — Run Full Test Suite
+
+[PROGRESS] Mark Step 5/14 `in_progress`: `Step 5/14: Run Full Test Suite [in_progress]`
 
 [DELEGATE][FAST-MODEL] Run all checks:
 ```bash
@@ -84,9 +128,14 @@ If any fail → stop:
 
 If all pass → proceed.
 
+[PROGRESS] Mark Step 5/14 `completed`: `Step 5/14: Run Full Test Suite [completed]`
+`Build: ✓  Lint: ✓  Tests: <count> passing`
+
 ---
 
 ## STEP 6 — Generate Changelog
+
+[PROGRESS] Mark Step 6/14 `in_progress`: `Step 6/14: Generate Changelog [in_progress]`
 
 [SHELL] Get commits since last tag:
 ```bash
@@ -136,9 +185,14 @@ git commit -m "docs(changelog): add <version> changelog
 Refs release <version>"
 ```
 
+[PROGRESS] Mark Step 6/14 `completed`: `Step 6/14: Generate Changelog [completed]`
+`Files changed: CHANGELOG.md`
+
 ---
 
 ## STEP 7 — Push + Create Release PR
+
+[PROGRESS] Mark Step 7/14 `in_progress`: `Step 7/14: Push + Create Release PR [in_progress]`
 
 [SHELL] Create PR from release branch to main:
 ```bash
@@ -156,9 +210,14 @@ gh pr create \
 - [ ] Version bumped (if applicable)"
 ```
 
+[PROGRESS] Mark Step 7/14 `completed`: `Step 7/14: Push + Create Release PR [completed]`
+`PR created`
+
 ---
 
 ## STEP 8 — Display Release PR URL
+
+[PROGRESS] Mark Step 8/14 `in_progress`: `Step 8/14: Display Release PR URL [in_progress]`
 
 ```
 ✓ Release PR created: <pr-url>
@@ -168,17 +227,27 @@ Base branch : {config.repo.main_branch}
 From        : {config.branches.release}<version>
 ```
 
+[PROGRESS] Mark Step 8/14 `completed`: `Step 8/14: Display Release PR URL [completed]`
+`Output displayed`
+
 ---
 
 ## STEP 9 — Final Confirmation
+
+[PROGRESS] Mark Step 9/14 `in_progress`: `Step 9/14: Final Confirmation [in_progress]`
 
 **G-10: "Confirm: Merge release PR and publish release? (yes/no)"**
 
 Wait for explicit "yes". Do not proceed without it.
 
+[PROGRESS] Mark Step 9/14 `completed`: `Step 9/14: Final Confirmation [completed]`
+`Gate passed`
+
 ---
 
 ## STEP 10 — Execute Release (after G-10)
+
+[PROGRESS] Mark Step 10/14 `in_progress`: `Step 10/14: Execute Release (after G-10) [in_progress]`
 
 All at once — no intermediate confirmations.
 
@@ -210,9 +279,14 @@ gh release create <version> \
   --notes "<changelog-body-from-step-6>"
 ```
 
+[PROGRESS] Mark Step 10/14 `completed`: `Step 10/14: Execute Release (after G-10) [completed]`
+`Release merged, tagged, back-merged`
+
 ---
 
 ## STEP 11 — Close Milestone
+
+[PROGRESS] Mark Step 11/14 `in_progress`: `Step 11/14: Close Milestone [in_progress]`
 
 [SHELL] Close the milestone for this release:
 ```bash
@@ -225,9 +299,14 @@ gh api "repos/{config.repo.owner}/{config.repo.name}/milestones/$MILESTONE_NUMBE
 If milestone not found or already closed → warn and continue:
 > Milestone "<milestone-title>" not found or already closed. Skipping.
 
+[PROGRESS] Mark Step 11/14 `completed`: `Step 11/14: Close Milestone [completed]`
+`Milestone closed`
+
 ---
 
 ## STEP 12 — Display Release URL
+
+[PROGRESS] Mark Step 12/14 `in_progress`: `Step 12/14: Display Release URL [in_progress]`
 
 ```
 ✓ Release published: <release-url>
@@ -239,9 +318,14 @@ Notes    : from CHANGELOG.md
 Milestone: <milestone-title> closed
 ```
 
+[PROGRESS] Mark Step 12/14 `completed`: `Step 12/14: Display Release URL [completed]`
+`Output displayed`
+
 ---
 
 ## STEP 13 — Post-Release Health Check
+
+[PROGRESS] Mark Step 13/14 `in_progress`: `Step 13/14: Post-Release Health Check [in_progress]`
 
 [SHELL] Check CI status on main:
 ```bash
@@ -267,9 +351,14 @@ Signal       : <NONE / WARNING>
 If CI is failing or 3+ new issues filed in the last hour:
 > WARNING: Post-release signals suggest a problem. Consider running /dev-rollback if issues are critical.
 
+[PROGRESS] Mark Step 13/14 `completed`: `Step 13/14: Post-Release Health Check [completed]`
+`Health check complete`
+
 ---
 
 ## STEP 14 — Next Milestone
+
+[PROGRESS] Mark Step 14/14 `in_progress`: `Step 14/14: Next Milestone [in_progress]`
 
 [SHELL] Show open issues for next milestone:
 ```bash
@@ -283,3 +372,6 @@ Release <version> is live.
 Next milestone: <next-milestone-title> (<n> open issues)
 To start: run /dev-start #<next-issue-number>
 ```
+
+[PROGRESS] Mark Step 14/14 `completed`: `Step 14/14: Next Milestone [completed]`
+`Output displayed`

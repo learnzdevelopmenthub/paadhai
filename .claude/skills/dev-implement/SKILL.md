@@ -27,9 +27,34 @@ If the user says "continue" or "resume":
 Store:
 - `{config.stack.build_cmd}` / `{config.stack.lint_cmd}` / `{config.stack.test_cmd}`
 
+### Progress Tracking
+
+[PROGRESS] Initialize TodoWrite checklist — 10 items, all `pending`:
+```
+Step 1/10: Load Config
+Step 2/10: Load Implementation Doc
+Step 3/10: Analyze Task Dependencies
+Step 4/10: Choose Execution Path
+Step 5/10: Pre-Implementation Check
+Step 6/10: Route Execution
+Step 7/10: Implementation Loop
+Step 8/10: Full Test Run
+Step 9/10: Summary
+Step 10/10: Handoff
+```
+(Graceful degradation: skip if TodoWrite unavailable)
+
+[PROGRESS] Mark Step 1/10 `completed`:
+```
+Step 1/10: Load Config [completed]
+Files read: .paadhai.json
+```
+
 ---
 
 ## STEP 2 — Load Implementation Doc
+
+[PROGRESS] Mark Step 2/10 `in_progress`: `Step 2/10: Load Implementation Doc [in_progress]`
 
 [SHELL] Get current branch:
 ```bash
@@ -50,9 +75,14 @@ Ask user:
 - Model preference? (fast / smart / auto)
 - Auto-commit after each step? (yes / no)
 
+[PROGRESS] Mark Step 2/10 `completed`: `Step 2/10: Load Implementation Doc [completed]`
+`Files read: docs/plans/issue-<n>/implementation.md, docs/plans/issue-<n>/plan.md`
+
 ---
 
 ## STEP 3 — Analyze Task Dependencies
+
+[PROGRESS] Mark Step 3/10 `in_progress`: `Step 3/10: Analyze Task Dependencies [in_progress]`
 
 Scan implementation steps for:
 - **Sequential patterns**: step B requires step A's output
@@ -60,9 +90,14 @@ Scan implementation steps for:
 
 If 3+ independent tasks with <20% dependencies → offer subagent-driven mode.
 
+[PROGRESS] Mark Step 3/10 `completed`: `Step 3/10: Analyze Task Dependencies [completed]`
+`Analysis complete`
+
 ---
 
 ## STEP 4 — Choose Execution Path
+
+[PROGRESS] Mark Step 4/10 `in_progress`: `Step 4/10: Choose Execution Path [in_progress]`
 
 - **Independent-heavy** → offer: subagent-driven OR sequential
 - **Sequential-heavy** → sequential only
@@ -70,9 +105,14 @@ If 3+ independent tasks with <20% dependencies → offer subagent-driven mode.
 
 Display the dependency analysis and let user choose.
 
+[PROGRESS] Mark Step 4/10 `completed`: `Step 4/10: Choose Execution Path [completed]`
+`Decision made`
+
 ---
 
 ## STEP 5 — Pre-Implementation Check
+
+[PROGRESS] Mark Step 5/10 `in_progress`: `Step 5/10: Pre-Implementation Check [in_progress]`
 
 [SHELL] Verify branch and working state:
 ```bash
@@ -83,16 +123,26 @@ git status
 - Must be on feature branch (not `{config.repo.develop_branch}` or `main`)
 - Working tree must be clean (or stash uncommitted work first)
 
+[PROGRESS] Mark Step 5/10 `completed`: `Step 5/10: Pre-Implementation Check [completed]`
+`Branch verified, working tree clean`
+
 ---
 
 ## STEP 6 — Route Execution
 
+[PROGRESS] Mark Step 6/10 `in_progress`: `Step 6/10: Route Execution [in_progress]`
+
 - **Subagent-driven** → hand off to `/paadhai:dev-parallel`. Pass the issue number as context.
 - **Sequential** → continue to Step 7
+
+[PROGRESS] Mark Step 6/10 `completed`: `Step 6/10: Route Execution [completed]`
+`Route determined`
 
 ---
 
 ## STEP 7 — Implementation Loop
+
+[PROGRESS] Mark Step 7/10 `in_progress`: `Step 7/10: Implementation Loop [in_progress]`
 
 For each `pending` step in the implementation doc:
 
@@ -159,9 +209,14 @@ Commit type guide:
 
 Subject: max 72 chars, imperative mood ("add X" not "added X").
 
+[PROGRESS] Mark Step 7/10 `completed`: `Step 7/10: Implementation Loop [completed]`
+`Files changed: <list from step>  Build: ✓  Lint: ✓`
+
 ---
 
 ## STEP 8 — Full Test Run
+
+[PROGRESS] Mark Step 8/10 `in_progress`: `Step 8/10: Full Test Run [in_progress]`
 
 [SHELL] After all steps complete:
 ```bash
@@ -172,9 +227,14 @@ Subject: max 72 chars, imperative mood ("add X" not "added X").
 
 Fix any failures before proceeding. Do not skip.
 
+[PROGRESS] Mark Step 8/10 `completed`: `Step 8/10: Full Test Run [completed]`
+`Build: ✓  Lint: ✓  Tests: <count> passing`
+
 ---
 
 ## STEP 9 — Summary
+
+[PROGRESS] Mark Step 9/10 `in_progress`: `Step 9/10: Summary [in_progress]`
 
 Display:
 ```
@@ -187,9 +247,14 @@ Lint    : ✓
 Tests   : <pass count> passing
 ```
 
+[PROGRESS] Mark Step 9/10 `completed`: `Step 9/10: Summary [completed]`
+`Output displayed`
+
 ---
 
 ## STEP 10 — Handoff
+
+[PROGRESS] Mark Step 10/10 `in_progress`: `Step 10/10: Handoff [in_progress]`
 
 ```
 Run /dev-pr to push the branch and open a pull request.
@@ -197,3 +262,6 @@ Run /dev-pr to push the branch and open a pull request.
 Branch  : <branch-name>
 Issue   : #<number>
 ```
+
+[PROGRESS] Mark Step 10/10 `completed`: `Step 10/10: Handoff [completed]`
+`Output displayed`
