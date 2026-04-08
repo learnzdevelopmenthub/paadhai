@@ -1,6 +1,6 @@
 # Paadhai (பாதை)
 
-> **AI-native SDLC pipeline**: 21 skills covering every stage of software development, from project setup through production release.
+> **AI-native SDLC pipeline**: 22 skills covering every stage of software development, from project setup through production release.
 
 Paadhai (Tamil for *path*) is a structured collection of AI agent skills that guide you through the entire software development lifecycle. Each skill is a self-contained workflow that knows where it fits in the pipeline, what to do, and what comes next, so your AI agent never improvises where consistency matters.
 
@@ -19,7 +19,7 @@ SETUP (once per project)
   /project-init → /project-plan → /release-plan
 
 NEXT MAJOR VERSION (v2.0, v3.0, ...)
-  Update project_version in .paadhai.json → /project-plan → /release-plan
+  /next-version → /project-plan → /release-plan
 
 DEV LOOP (once per issue/feature)
   /dev-start → /dev-plan → /dev-test → /dev-implement → /dev-pr → /dev-audit → /dev-ship
@@ -88,7 +88,7 @@ gemini extensions install paadhai
 /release-plan     # creates GitHub milestones + issues
 
 # 1b. Plan the next major version (v2.0, v3.0, ...)
-# Update project_version to "2.0" in .paadhai.json, then:
+/next-version     # bumps project_version in .paadhai.json
 /project-plan     # generates docs/srs-v2.0.md (loads v1.0 SRS as context)
 /release-plan     # creates v2.1, v2.2 milestones + issues
 
@@ -206,6 +206,7 @@ Run any of these at any point in the pipeline, standalone.
 
 | Command | What it does |
 |---------|-------------|
+| `/next-version` | Bump project_version in `.paadhai.json`, validate, commit, and optionally chain `/project-plan` → `/release-plan` |
 | `/paadhai-skill` | Scaffold a new Paadhai skill with correct structure and register it |
 
 ---
@@ -238,7 +239,7 @@ Created automatically by `/project-init`. Every skill reads from this file.
 | Situation | Skill |
 |-----------|-------|
 | Starting a brand-new project | `/project-init` → `/project-plan` → `/release-plan` |
-| Planning a new major version (v2.0, v3.0) | Set `project_version` in `.paadhai.json` → `/project-plan` → `/release-plan` |
+| Planning a new major version (v2.0, v3.0) | `/next-version` → `/project-plan` → `/release-plan` |
 | Starting work on an issue | `/dev-start` |
 | Need a plan before writing code | `/dev-plan` |
 | Ready to write tests | `/dev-test` |
@@ -263,7 +264,7 @@ Created automatically by `/project-init`. Every skill reads from this file.
 
 | Feature | Claude Code | Cursor | Codex CLI | OpenCode | Gemini CLI |
 |---------|:-----------:|:------:|:---------:|:--------:|:----------:|
-| All 21 skills | ✓ | ✓ | ✓ | ✓ | ✓ |
+| All 22 skills | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Subagent dispatch | ✓ | Partial | ✗ | ✗ | Partial |
 | Parallel execution | ✓ | Sequential | Sequential | Sequential | Partial |
 | Model selection | ✓ | ✗ | ✗ | ✗ | ✓ |
