@@ -9,6 +9,23 @@ Cut the release branch, run tests, create PR to main, tag, publish GitHub Releas
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+Display:
+```
+────────────────────────────────────────
+dev-release
+14 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:

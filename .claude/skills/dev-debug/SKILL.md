@@ -9,6 +9,40 @@ description: Use when debugging failures — 4-phase systematic debugging with e
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+If branch matches `feature/*` or `fix/*`:
+- Extract issue number from branch name (e.g., `feature/42-add-login` → `42`)
+- [SHELL] Fetch issue title:
+```bash
+gh api repos/{config.repo.owner}/{config.repo.name}/issues/<number> --jq '.title'
+```
+
+Display (with issue context):
+```
+────────────────────────────────────────
+dev-debug | Issue #<number> — <title>
+11 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+Display (no issue context — not on feature/fix branch):
+```
+────────────────────────────────────────
+dev-debug
+11 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+If `gh api` fails, degrade gracefully — show banner without issue title.
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
