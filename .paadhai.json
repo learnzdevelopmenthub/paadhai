@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "repo": {
+    "owner": "learnzdevelopmenthub",
+    "name": "paadhai",
+    "develop_branch": "develop",
+    "main_branch": "main"
+  },
+  "github": {
+    "project_id": "PVT_kwHOCLuofc4BTYOm",
+    "project_number": 2,
+    "status_field_id": "PVTSSF_lAHOCLuofc4BTYOmzhAoxz4",
+    "statuses": {
+      "todo": "f75ad846",
+      "in_progress": "47fc9ee4",
+      "done": "98236657"
+    }
+  },
+  "stack": {
+    "language": "none",
+    "build_cmd": "",
+    "lint_cmd": "",
+    "test_cmd": ""
+  },
+  "branches": {
+    "feature": "feature/",
+    "fix": "fix/",
+    "release": "release/"
+  }
+}
