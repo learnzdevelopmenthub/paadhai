@@ -26,6 +26,7 @@ Read `references/claude-tools.md` for capability marker → tool mappings.
 | `/paadhai:dev-deps` | Dependency audit: CVEs, licenses, outdated |
 | `/paadhai:dev-docs` | Generate API, user, architecture docs |
 | `/paadhai:dev-adr` | Record Architecture Decision Records |
+| `/paadhai:next-version` | Bump project_version, commit, chain planning pipeline |
 | `/paadhai:paadhai-skill` | Scaffold and register new skills |
 
 ## Config
