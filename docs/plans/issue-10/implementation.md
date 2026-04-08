@@ -12,7 +12,7 @@ steps: 2
 | Step | Description | Status |
 |------|-------------|--------|
 | 1 | Add progress dashboard sub-step 7h to implementation loop | done |
-| 2 | Verify SKILL.md is well-formed and all references are consistent | pending |
+| 2 | Verify SKILL.md is well-formed and all references are consistent | done |
 
 ---
 
