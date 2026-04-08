@@ -17,11 +17,21 @@ Transform a product idea into a confirmed Software Requirements Specification do
 
 > No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
+Derive SRS output path from config:
+- If `project_version` exists → `{srs_path}` = `docs/srs-v{project_version}.md`
+- If `project_version` absent → `{srs_path}` = `docs/srs.md`
+
 ---
 
 ## STEP 2 — Read Existing Context
 
 [READ] any existing docs in `docs/` or source files if project has code already. Understand current state before asking questions.
+
+If `project_version` is set in config:
+- [READ] Look for prior SRS files: glob `docs/srs-v*.md` and `docs/srs.md`
+- If a prior SRS exists, load it as context and display:
+  > Loaded prior SRS (`{prior_srs_filename}`) as reference for delta planning.
+- Use the prior SRS to understand existing features, so the user can focus on what's new or changed in this version.
 
 ---
 
@@ -96,21 +106,23 @@ Wait for explicit approval.
 
 ## STEP 9 — Save
 
-[WRITE] Save SRS to `docs/srs.md`.
+[WRITE] Save SRS to `{srs_path}`.
 
 [SHELL] Commit:
 ```bash
-git add docs/srs.md
-git commit -m "docs(srs): add confirmed SRS
+git add {srs_path}
+git commit -m "docs(srs): add confirmed SRS for v{project_version}
 
 Refs: product description confirmed by user."
 ```
+
+> If no `project_version`, commit message omits the version suffix: `"docs(srs): add confirmed SRS"`.
 
 ---
 
 ## STEP 10 — Handoff
 
 ```
-SRS saved to docs/srs.md.
+SRS saved to {srs_path}.
 Next step: run /release-plan to create your GitHub project milestones and issues.
 ```

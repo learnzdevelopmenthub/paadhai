@@ -74,10 +74,12 @@ Single input round — ask all questions at once.
 - Lint command (e.g., `npm run lint`, `cargo clippy`)?
 - Test command (e.g., `npm test`, `cargo test`, `pytest`)?
 - Create new project board or use existing?
+- Target product version? (leave blank for first release)
 
 **Existing project:**
 - Pre-fill all detected values from Step 2b
 - Ask user to confirm or override each
+- Target product version? (leave blank to keep current or omit)
 
 ---
 
@@ -146,6 +148,7 @@ All at once — no intermediate confirmations.
 ```json
 {
   "version": "1",
+  "project_version": "{project_version}",
   "repo": {
     "owner": "{owner}",
     "name": "{repo-name}",
@@ -175,6 +178,8 @@ All at once — no intermediate confirmations.
   }
 }
 ```
+
+> If the user left target version blank, omit the `project_version` field entirely.
 
 [SHELL] Create GitHub repo (new projects only):
 ```bash

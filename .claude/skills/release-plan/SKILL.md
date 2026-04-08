@@ -17,19 +17,28 @@ Break the confirmed SRS into GitHub milestones and atomic issues, then create th
 
 > No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
-[READ] `docs/srs.md` — hard stop if missing:
+Derive SRS path from config:
+- If `project_version` exists → `{srs_path}` = `docs/srs-v{project_version}.md`
+- If `project_version` absent → `{srs_path}` = `docs/srs.md`
 
-> No SRS found at docs/srs.md. Run `/paadhai:project-plan` first.
+[READ] `{srs_path}` — hard stop if missing:
+
+> No SRS found at {srs_path}. Run `/paadhai:project-plan` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}`
 - `{config.github.project_id}` / `{config.github.status_field_id}` / `{config.github.statuses.todo}`
+- `{config.project_version}` (if present)
 
 ---
 
 ## STEP 2 — Analyze Requirements
 
-Read all functional requirements (FR-*) in the SRS. Group them into milestones by logical delivery increments (e.g., v0.1 — Core, v0.2 — API, v0.3 — Release).
+Read all functional requirements (FR-*) in the SRS. Group them into milestones by logical delivery increments.
+
+Milestone naming uses the project version as a base:
+- If `project_version` = `"2.0"` → milestones: `v2.1 — Name`, `v2.2 — Name`, `v2.3 — Name`
+- If `project_version` absent → milestones: `v0.1 — Name`, `v0.2 — Name`, `v0.3 — Name` (current behavior)
 
 Rules:
 - Each milestone should be independently shippable
@@ -82,7 +91,7 @@ Show the complete release plan:
 ```
 Release Plan
 ════════════════════════════════════
-Milestone v0.1 — <name> (<n> issues)
+Milestone v{major}.1 — <name> (<n> issues)
   #1: <title>
       ACs: <count> | Labels: <labels>
   #2: <title>
