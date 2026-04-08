@@ -11,6 +11,23 @@ Transform a product idea into a confirmed Software Requirements Specification do
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+Display:
+```
+────────────────────────────────────────
+project-plan
+10 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
@@ -21,9 +38,34 @@ Derive SRS output path from config:
 - If `project_version` exists → `{srs_path}` = `docs/srs-v{project_version}.md`
 - If `project_version` absent → `{srs_path}` = `docs/srs.md`
 
+### Progress Tracking
+
+[PROGRESS] Initialize TodoWrite checklist — 10 items, all `pending`:
+```
+Step 1/10: Load Config
+Step 2/10: Read Existing Context
+Step 3/10: Product Description
+Step 4/10: Clarifying Questions
+Step 5/10: Research
+Step 6/10: Generate SRS
+Step 7/10: Present SRS
+Step 8/10: Revision Loop
+Step 9/10: Save
+Step 10/10: Handoff
+```
+(Graceful degradation: skip if TodoWrite unavailable)
+
+[PROGRESS] Mark Step 1/10 `completed`:
+```
+Step 1/10: Load Config [completed]
+Files read: .paadhai.json
+```
+
 ---
 
 ## STEP 2 — Read Existing Context
+
+[PROGRESS] Mark Step 2/10 `in_progress`: `Step 2/10: Read Existing Context [in_progress]`
 
 [READ] any existing docs in `docs/` or source files if project has code already. Understand current state before asking questions.
 
@@ -33,17 +75,27 @@ If `project_version` is set in config:
   > Loaded prior SRS (`{prior_srs_filename}`) as reference for delta planning.
 - Use the prior SRS to understand existing features, so the user can focus on what's new or changed in this version.
 
+[PROGRESS] Mark Step 2/10 `completed`: `Step 2/10: Read Existing Context [completed]`
+`Files read: <existing docs found>`
+
 ---
 
 ## STEP 3 — Product Description
+
+[PROGRESS] Mark Step 3/10 `in_progress`: `Step 3/10: Product Description [in_progress]`
 
 Ask the user to describe the product or feature set in free-form. Single input round.
 
 > "Describe what you want to build. Include the problem it solves, who uses it, and any key features you have in mind."
 
+[PROGRESS] Mark Step 3/10 `completed`: `Step 3/10: Product Description [completed]`
+`Description received`
+
 ---
 
 ## STEP 4 — Clarifying Questions
+
+[PROGRESS] Mark Step 4/10 `in_progress`: `Step 4/10: Clarifying Questions [in_progress]`
 
 Ask all questions at once — single input round:
 
@@ -56,18 +108,28 @@ Ask all questions at once — single input round:
 7. Any compliance, security, or performance requirements?
 8. Are there existing systems this must integrate with?
 
+[PROGRESS] Mark Step 4/10 `completed`: `Step 4/10: Clarifying Questions [completed]`
+`Answers received`
+
 ---
 
 ## STEP 5 — Research
+
+[PROGRESS] Mark Step 5/10 `in_progress`: `Step 5/10: Research [in_progress]`
 
 [DELEGATE][FAST-MODEL][SEARCH] Validate tech stack choices from Step 4:
 - Check current stable versions of proposed frameworks/libraries
 - Verify compatibility between components
 - Check for known issues with the proposed combination
 
+[PROGRESS] Mark Step 5/10 `completed`: `Step 5/10: Research [completed]`
+`Research complete`
+
 ---
 
 ## STEP 6 — Generate SRS
+
+[PROGRESS] Mark Step 6/10 `in_progress`: `Step 6/10: Generate SRS [in_progress]`
 
 Use `templates/srs.md` as the base template. Fill in all sections:
 
@@ -85,9 +147,14 @@ Use `templates/srs.md` as the base template. Fill in all sections:
 - Acceptance criteria must be specific and testable
 - No vague requirements ("should be fast" → "response time < 200ms under 100 concurrent users")
 
+[PROGRESS] Mark Step 6/10 `completed`: `Step 6/10: Generate SRS [completed]`
+`SRS generated`
+
 ---
 
 ## STEP 7 — Present SRS
+
+[PROGRESS] Mark Step 7/10 `in_progress`: `Step 7/10: Present SRS [in_progress]`
 
 Show the full SRS document.
 
@@ -95,16 +162,26 @@ Show the full SRS document.
 
 Wait for explicit approval.
 
+[PROGRESS] Mark Step 7/10 `completed`: `Step 7/10: Present SRS [completed]`
+`SRS presented`
+
 ---
 
 ## STEP 8 — Revision Loop
 
+[PROGRESS] Mark Step 8/10 `in_progress`: `Step 8/10: Revision Loop [in_progress]`
+
 - **Approved** → proceed to Step 9
 - **Changes requested** → apply changes → re-present full SRS → repeat G-02
+
+[PROGRESS] Mark Step 8/10 `completed`: `Step 8/10: Revision Loop [completed]`
+`SRS approved`
 
 ---
 
 ## STEP 9 — Save
+
+[PROGRESS] Mark Step 9/10 `in_progress`: `Step 9/10: Save [in_progress]`
 
 [WRITE] Save SRS to `{srs_path}`.
 
@@ -118,11 +195,19 @@ Refs: product description confirmed by user."
 
 > If no `project_version`, commit message omits the version suffix: `"docs(srs): add confirmed SRS"`.
 
+[PROGRESS] Mark Step 9/10 `completed`: `Step 9/10: Save [completed]`
+`Files changed: {srs_path}`
+
 ---
 
 ## STEP 10 — Handoff
+
+[PROGRESS] Mark Step 10/10 `in_progress`: `Step 10/10: Handoff [in_progress]`
 
 ```
 SRS saved to {srs_path}.
 Next step: run /release-plan to create your GitHub project milestones and issues.
 ```
+
+[PROGRESS] Mark Step 10/10 `completed`: `Step 10/10: Handoff [completed]`
+`Output displayed`

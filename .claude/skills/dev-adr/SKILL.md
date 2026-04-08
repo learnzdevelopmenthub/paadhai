@@ -11,6 +11,40 @@ Record architectural decisions with context, alternatives considered, rationale,
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+If branch matches `feature/*` or `fix/*`:
+- Extract issue number from branch name (e.g., `feature/42-add-login` → `42`)
+- [SHELL] Fetch issue title:
+```bash
+gh api repos/{config.repo.owner}/{config.repo.name}/issues/<number> --jq '.title'
+```
+
+Display (with issue context):
+```
+────────────────────────────────────────
+dev-adr | Issue #<number> — <title>
+10 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+Display (no issue context — not on feature/fix branch):
+```
+────────────────────────────────────────
+dev-adr
+10 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+If `gh api` fails, degrade gracefully — show banner without issue title.
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
