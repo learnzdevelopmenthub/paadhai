@@ -6,7 +6,7 @@
   "author": { "name": "Paadhai Project" },
   "license": "MIT",
   "source": {
-    "source": "github",
+    "type": "github",
     "repo": "learnzdevelopmenthub/paadhai"
   },
   "category": "Development Workflow",
