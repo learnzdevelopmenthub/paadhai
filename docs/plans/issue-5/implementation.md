@@ -12,7 +12,7 @@ status: pending
 | Step | Description | Status |
 |------|-------------|--------|
 | 1 | Update `.paadhai.json` — add `project_version` field | done |
-| 2 | Update `/project-init` — add target version question | pending |
+| 2 | Update `/project-init` — add target version question | done |
 | 3 | Update `/project-plan` — version-aware SRS paths | pending |
 | 4 | Update `/release-plan` — version-scoped milestones | pending |
 
