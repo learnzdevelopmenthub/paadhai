@@ -15,6 +15,8 @@
   --gold-glow: #f0a50044;
   --red:       #f85149;
   --red-dim:   #f8514922;
+  --blue:      #58a6ff;
+  --blue-dim:  #58a6ff22;
   --green:     #3fb950;
   --radius:    12px;
   --radius-sm: 8px;
@@ -413,6 +415,7 @@ img { max-width: 100%; }
 }
 
 .tag-gold { color: var(--gold); }
+.tag-blue { color: var(--blue); }
 .tag-red { color: var(--red); }
 
 .pipeline-steps {

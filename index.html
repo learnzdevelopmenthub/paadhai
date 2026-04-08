@@ -90,6 +90,18 @@
           <p class="pipeline-desc">Once per project — scaffold config, generate SRS, create GitHub milestones and issues.</p>
         </div>
 
+        <div class="pipeline-card">
+          <div class="pipeline-tag tag-blue">NEXT MAJOR VERSION</div>
+          <div class="pipeline-steps">
+            <div class="pipe-step">Update project_version</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/project-plan</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/release-plan</div>
+          </div>
+          <p class="pipeline-desc">Plan v2.0, v3.0, etc. — versioned SRS files, version-scoped milestones, prior SRS loaded as context.</p>
+        </div>
+
         <div class="pipeline-card featured">
           <div class="pipeline-tag tag-gold">DEV LOOP</div>
           <div class="pipeline-steps">
@@ -238,7 +250,7 @@ cp paadhai/AGENTS.md your-project/</code></pre>
       <div class="section-header reveal">
         <p class="section-label">Quick Start</p>
         <h2 class="section-title">From idea to production</h2>
-        <p class="section-desc">Three pipelines. One config file. No guesswork.</p>
+        <p class="section-desc">Four pipelines. One config file. No guesswork.</p>
       </div>
       <div class="quickstart-block reveal">
         <div class="code-block code-block-lg">
@@ -250,6 +262,11 @@ cp paadhai/AGENTS.md your-project/</code></pre>
 /project-init     <span class="c-comment"># creates .paadhai.json</span>
 /project-plan     <span class="c-comment"># generates docs/srs.md</span>
 /release-plan     <span class="c-comment"># creates GitHub milestones + issues</span>
+
+<span class="c-comment"># 1b. Plan next major version (v2.0, v3.0, ...)</span>
+<span class="c-comment"># Update project_version to "2.0" in .paadhai.json, then:</span>
+/project-plan     <span class="c-comment"># generates docs/srs-v2.0.md (loads v1.0 SRS as context)</span>
+/release-plan     <span class="c-comment"># creates v2.1, v2.2 milestones + issues</span>
 
 <span class="c-comment"># 2. Start a feature (per issue)</span>
 /dev-start <span class="c-num">#1</span>     <span class="c-comment"># branch: feature/1-my-feature</span>
