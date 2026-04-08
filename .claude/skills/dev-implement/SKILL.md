@@ -243,6 +243,52 @@ Commit type guide:
 
 Subject: max 72 chars, imperative mood ("add X" not "added X").
 
+### 7h — Progress Dashboard
+After each step's commit, display a compact aggregate progress dashboard. Data MUST come from actual command output — never estimate or fabricate values.
+
+[SHELL] Gather cumulative stats:
+```bash
+# Count commits on this branch since diverging from develop
+COMMIT_COUNT=$(git rev-list {config.repo.develop_branch}..HEAD --count)
+
+# Count created (A) and modified (M) files since diverging from develop
+CREATED=$(git diff --name-status {config.repo.develop_branch}...HEAD | grep -c '^A')
+MODIFIED=$(git diff --name-status {config.repo.develop_branch}...HEAD | grep -c '^M')
+TOTAL_FILES=$((CREATED + MODIFIED))
+```
+
+Compute progress bar:
+- Let `DONE` = number of implementation steps completed so far (including this one)
+- Let `TOTAL` = total number of implementation steps
+- Let `PCT` = `DONE * 100 / TOTAL`
+- Filled chars = `DONE * 12 / TOTAL` (integer division), using `█`
+- Empty chars = `12 - filled`, using `░`
+
+Determine test and build status:
+- **Build**: Use the result from the most recent 7d execution. If 7d was skipped for this step (no source files changed), use the last known build result. If no build has run yet, show `not yet run`.
+- **Tests**: Use the result from the most recent `{config.stack.test_cmd}` execution (typically Step 8). If no test command has run yet, show `not yet run`.
+
+Display:
+```
+Progress: ████████░░░░ <DONE>/<TOTAL> steps (<PCT>%)
+══════════════════════════════════════════
+Files changed : <TOTAL_FILES> (<CREATED> created, <MODIFIED> modified)
+Commits       : <COMMIT_COUNT>
+Tests         : <passing> passing, <failing> failing | not yet run
+Build         : passing | failing | not yet run
+══════════════════════════════════════════
+```
+
+**Constraints:**
+- Maximum 6 lines excluding the `══` border lines (AC-4)
+- Progress bar is always 12 characters wide (AC-3)
+- All values derived from actual `git diff`, `git rev-list`, and command output — never from agent estimation (AC-5)
+
+**Edge cases:**
+- First step completed with no prior changes: show `0` for files/commits, `not yet run` for tests/build
+- Step where build/lint was skipped (no source files): show last known build status
+- Build or test failure: show `failing`, not `passing`
+
 [PROGRESS] Mark Step 7/10 `completed`: `Step 7/10: Implementation Loop [completed]`
 `Files changed: <list from step>  Build: ✓  Lint: ✓`
 
