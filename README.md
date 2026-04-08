@@ -18,6 +18,9 @@ The skills are organized into four pipelines:
 SETUP (once per project)
   /project-init → /project-plan → /release-plan
 
+NEXT MAJOR VERSION (v2.0, v3.0, ...)
+  Update project_version in .paadhai.json → /project-plan → /release-plan
+
 DEV LOOP (once per issue/feature)
   /dev-start → /dev-plan → /dev-test → /dev-implement → /dev-pr → /dev-audit → /dev-ship
 
@@ -84,6 +87,11 @@ gemini extensions install paadhai
 /project-plan     # generates docs/srs.md from your product idea
 /release-plan     # creates GitHub milestones + issues
 
+# 1b. Plan the next major version (v2.0, v3.0, ...)
+# Update project_version to "2.0" in .paadhai.json, then:
+/project-plan     # generates docs/srs-v2.0.md (loads v1.0 SRS as context)
+/release-plan     # creates v2.1, v2.2 milestones + issues
+
 # 2. Start a feature (per issue)
 /dev-start #1     # creates branch feature/1-my-feature
 /dev-plan         # security analysis, design review, implementation plan
@@ -108,8 +116,8 @@ Run these once when starting a new project.
 | Command | What it does | Output |
 |---------|-------------|--------|
 | `/project-init` | Initialize `.paadhai.json`, connect GitHub repo, optionally enable branch protection | `.paadhai.json` |
-| `/project-plan` | Generate a Software Requirements Specification from your product description | `docs/srs.md` |
-| `/release-plan` | Create GitHub milestones and issues from your SRS | GitHub milestones + issues |
+| `/project-plan` | Generate a Software Requirements Specification from your product description | `docs/srs.md` (or `docs/srs-v{version}.md` when versioned) |
+| `/release-plan` | Create GitHub milestones and issues from your SRS | GitHub milestones + issues (version-scoped when `project_version` is set) |
 
 ---
 
@@ -209,6 +217,7 @@ Created automatically by `/project-init`. Every skill reads from this file.
 | Key | Description |
 |-----|-------------|
 | `version` | Paadhai config schema version |
+| `project_version` | Target product version (e.g. `1.0`, `2.0`) — controls SRS file naming and milestone prefixes. Omit for first release. |
 | `repo.owner` | GitHub username or org |
 | `repo.name` | Repository name |
 | `repo.main_branch` | Production branch (e.g. `main`) |
@@ -229,6 +238,7 @@ Created automatically by `/project-init`. Every skill reads from this file.
 | Situation | Skill |
 |-----------|-------|
 | Starting a brand-new project | `/project-init` → `/project-plan` → `/release-plan` |
+| Planning a new major version (v2.0, v3.0) | Set `project_version` in `.paadhai.json` → `/project-plan` → `/release-plan` |
 | Starting work on an issue | `/dev-start` |
 | Need a plan before writing code | `/dev-plan` |
 | Ready to write tests | `/dev-test` |
