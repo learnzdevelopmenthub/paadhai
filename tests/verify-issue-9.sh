@@ -278,7 +278,7 @@ check "TC-19" "Non-issue preambles don't mention Issue #" "$bad" eq 0
 bad=0
 for skill in "${ALL_SKILLS[@]}"; do
   f=".claude/skills/$skill/SKILL.md"
-  c=$(preamble_grep_fixed "0 steps" "$f")
+  c=$(sed -n '/^## PREAMBLE/,/^## STEP 1/p' "$f" 2>/dev/null | grep -cE "^0 steps" 2>/dev/null || true)
   if [ "$c" -ge 1 ] 2>/dev/null; then
     echo "         ZERO STEPS: $f"
     bad=$((bad + 1))
