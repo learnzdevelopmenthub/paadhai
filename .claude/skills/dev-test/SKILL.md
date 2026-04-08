@@ -15,7 +15,7 @@ Generate a test plan from acceptance criteria and write test file stubs before i
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.stack.test_cmd}`

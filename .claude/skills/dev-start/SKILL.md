@@ -15,7 +15,7 @@ Pick an issue, run pre-flight checks, create the feature branch, move the issue 
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store config values for use throughout:
 - `{config.repo.owner}` / `{config.repo.name}`

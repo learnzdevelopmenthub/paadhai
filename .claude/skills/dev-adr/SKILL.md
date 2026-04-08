@@ -15,7 +15,7 @@ Record architectural decisions with context, alternatives considered, rationale,
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}`
@@ -46,7 +46,7 @@ Directory  : docs/adr/
 
 ## STEP 3 — Gather Context
 
-**If invoked from `/dev-plan`** (decision context was passed):
+**If invoked from `/paadhai:dev-plan`** (decision context was passed):
 - Use the architectural decision context provided by dev-plan
 - Skip asking — proceed directly to Step 4
 
@@ -172,7 +172,7 @@ Refs #<issue-number>"
 
 ## STEP 10 — Handoff
 
-**If invoked from `/dev-plan`:**
+**If invoked from `/paadhai:dev-plan`:**
 ```
 ADR recorded. Returning to planning flow.
 

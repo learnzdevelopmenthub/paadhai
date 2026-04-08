@@ -15,7 +15,7 @@ Read-only status view: scan implementation docs, milestone stats, board columns.
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}`

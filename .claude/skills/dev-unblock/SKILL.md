@@ -13,7 +13,7 @@ Detect CI failure type or merge conflict, diagnose, fix, re-push, poll until gre
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}` / `{config.repo.develop_branch}`
@@ -158,7 +158,7 @@ gh pr checks <pr-number> --watch --interval 30
 
 - If all checks pass → proceed to Step 7
 - If CI exceeds 5 minutes → report current status:
-  > CI is still running. Re-run `/dev-unblock` to check again.
+  > CI is still running. Re-run `/paadhai:dev-unblock` to check again.
 - If new failure detected → return to Step 2 (different failure type may appear)
 - Maximum 3 retry loops total. After 3 → stop:
   > 3 fix attempts exhausted. Manual intervention needed.

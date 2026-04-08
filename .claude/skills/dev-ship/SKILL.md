@@ -7,7 +7,7 @@ description: Use when shipping — merge PR to develop, update project board, cl
 
 Merge the approved PR, move issue to Done on the project board, clean up the feature branch.
 
-**Prerequisites:** PR must exist and CI must be passing. Run `/dev-audit` first if not done.
+**Prerequisites:** PR must exist and CI must be passing. Run `/paadhai:dev-audit` first if not done.
 
 ---
 
@@ -15,7 +15,7 @@ Merge the approved PR, move issue to Done on the project board, clean up the fea
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}`

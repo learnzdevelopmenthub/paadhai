@@ -13,7 +13,7 @@ Recover from a bad release: delete the tag, revert the merge commit on main, cre
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}`

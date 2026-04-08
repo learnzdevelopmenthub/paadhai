@@ -7,7 +7,7 @@ description: Use when opening a pull request — push branch, create PR, poll CI
 
 Push the feature branch, create the pull request, poll CI, and report results.
 
-**Does NOT change project board status** — board update happens in `/dev-ship`.
+**Does NOT change project board status** — board update happens in `/paadhai:dev-ship`.
 
 ---
 
@@ -15,7 +15,7 @@ Push the feature branch, create the pull request, poll CI, and report results.
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 [READ] `docs/plans/issue-<n>/plan.md` — derive issue number from current branch first.
 

@@ -13,7 +13,7 @@ Create new Paadhai skills with proper conventions, register them in CLAUDE.md an
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 This confirms we are in a Paadhai-managed project.
 
@@ -79,7 +79,7 @@ description: <trigger-description>
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - <relevant config values for this skill>

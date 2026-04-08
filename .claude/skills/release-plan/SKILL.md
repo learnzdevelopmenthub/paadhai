@@ -15,11 +15,11 @@ Break the confirmed SRS into GitHub milestones and atomic issues, then create th
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 [READ] `docs/srs.md` — hard stop if missing:
 
-> No SRS found at docs/srs.md. Run `/project-plan` first.
+> No SRS found at docs/srs.md. Run `/paadhai:project-plan` first.
 
 Store:
 - `{config.repo.owner}` / `{config.repo.name}`

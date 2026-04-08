@@ -15,7 +15,7 @@ Brainstorm, design review, security assessment, version validation, generate pla
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store config values:
 - `{config.repo.owner}` / `{config.repo.name}`
@@ -100,7 +100,7 @@ If the design review identifies any of the following → flag for ADR:
 - Breaking change to existing interfaces or contracts
 
 Ask user: "This issue involves an architectural decision. Generate an ADR? (yes/no)"
-- **yes** → after plan is saved (Step 12), invoke `/dev-adr` with the decision context
+- **yes** → after plan is saved (Step 12), invoke `/paadhai:dev-adr` with the decision context
 - **no** → note "ADR: declined" in the plan
 
 ---
@@ -236,7 +236,7 @@ confirmed_at: <timestamp>
 
 Followed by full plan content.
 
-If Step 6b ADR was approved → invoke `/dev-adr` now with the architectural decision context.
+If Step 6b ADR was approved → invoke `/paadhai:dev-adr` now with the architectural decision context.
 
 ---
 

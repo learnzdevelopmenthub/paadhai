@@ -15,7 +15,7 @@ Transform a product idea into a confirmed Software Requirements Specification do
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 ---
 

@@ -15,7 +15,7 @@ Generate API reference, user guide, or architecture documentation from the curre
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.stack.language}`

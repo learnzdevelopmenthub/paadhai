@@ -7,7 +7,7 @@ description: Use when reviewing a PR — architecture, security, and compatibili
 
 Architecture, security, and compatibility review of the PR with explicit human sign-off.
 
-**Does NOT change project board status** — board update happens in `/dev-ship`.
+**Does NOT change project board status** — board update happens in `/paadhai:dev-ship`.
 
 ---
 
@@ -15,7 +15,7 @@ Architecture, security, and compatibility review of the PR with explicit human s
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 [READ] `docs/plans/issue-<n>/plan.md` — derive issue number from current branch first.
 

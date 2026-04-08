@@ -13,7 +13,7 @@ Scan project dependencies for security vulnerabilities, license compliance issue
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.stack.language}`

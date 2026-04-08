@@ -13,7 +13,7 @@ Dispatch independent implementation tasks to fresh subagents, review each for sp
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.stack.build_cmd}` / `{config.stack.lint_cmd}` / `{config.stack.test_cmd}`
@@ -62,7 +62,7 @@ Group | Steps       | Files Touched          | Dependencies
 ```
 
 If no independent groups found (all sequential) → stop:
-> All tasks are sequential. Use `/dev-implement` in sequential mode instead.
+> All tasks are sequential. Use `/paadhai:dev-implement` in sequential mode instead.
 
 ---
 

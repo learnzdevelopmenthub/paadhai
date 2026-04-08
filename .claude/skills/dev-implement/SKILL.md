@@ -22,7 +22,7 @@ If the user says "continue" or "resume":
 
 [READ] `.paadhai.json` — hard stop if missing:
 
-> No `.paadhai.json` found. Run `/project-init` first.
+> No `.paadhai.json` found. Run `/paadhai:project-init` first.
 
 Store:
 - `{config.stack.build_cmd}` / `{config.stack.lint_cmd}` / `{config.stack.test_cmd}`
@@ -87,7 +87,7 @@ git status
 
 ## STEP 6 — Route Execution
 
-- **Subagent-driven** → hand off to `/dev-parallel`. Pass the issue number as context.
+- **Subagent-driven** → hand off to `/paadhai:dev-parallel`. Pass the issue number as context.
 - **Sequential** → continue to Step 7
 
 ---
