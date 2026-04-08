@@ -83,34 +83,43 @@ Single input round — ask all questions at once.
 
 ---
 
-## STEP 4 — Discover Project Board IDs
+## STEP 4 — Discover or Create Project Board
 
-If using a GitHub project board:
+**Always create a new project board for new projects. For existing projects, find the linked one.**
 
-[DELEGATE][FAST-MODEL] List projects:
+### New project — Create board:
+
+[SHELL] Create project:
+```bash
+gh project create --owner {owner} --title "{repo-name} — Development Roadmap" --format json
+```
+
+Extract `number` and `id` from JSON output.
+
+[SHELL] Link project to the repo:
+```bash
+gh project link {project_number} --owner {owner} --repo {owner}/{repo-name}
+```
+
+### Existing project — Find linked board:
+
+[SHELL] List projects for owner:
 ```bash
 gh project list --owner {owner} --format json
 ```
 
-Find the target project. Then query field IDs:
+Find the project linked to this repo by title or by checking linked repos. Use the matching project's `number` and `id`.
+
+### Both paths — Extract field IDs:
+
+[SHELL] Query Status field and option IDs:
 ```bash
-gh api graphql -f query='{ 
-  organization(login: "{owner}") { 
-    projectV2(number: {project_number}) { 
-      id
-      fields(first: 20) { 
-        nodes { 
-          ... on ProjectV2SingleSelectField { 
-            id name options { id name } 
-          } 
-        } 
-      } 
-    } 
-  } 
-}'
+gh api graphql -f query='{ node(id: "{project_id}") { ... on ProjectV2 { fields(first: 20) { nodes { ... on ProjectV2SingleSelectField { id name options { id name } } } } } } }'
 ```
 
 Extract: `project_id`, `status_field_id`, and option IDs for "Todo", "In Progress", "Done".
+
+> Note: Use `node(id: ...)` query — NOT `organization(login: ...)`. The owner may be a user, not an org, and `node` works for both.
 
 ---
 
@@ -142,9 +151,34 @@ Wait for explicit "yes".
 
 ## STEP 6 — Execute (after G-01)
 
-All at once — no intermediate confirmations.
+Execute in this exact order — repo must exist before project can be linked to it.
 
-[WRITE] `.paadhai.json` to project root:
+**6a. Create GitHub repo** (new projects only):
+```bash
+gh repo create {repo-name} --{public|private} --source=. --remote=origin --push
+```
+
+**6b. Create `develop` branch** (if missing):
+```bash
+git checkout -b develop
+git push -u origin develop
+```
+
+**6c. Create and link project board** (new projects only):
+```bash
+# Create project
+gh project create --owner {owner} --title "{repo-name} — Development Roadmap" --format json
+
+# Link to repo (use project_number from above)
+gh project link {project_number} --owner {owner} --repo {owner}/{repo-name}
+
+# Get field IDs
+gh api graphql -f query='{ node(id: "{project_id}") { ... on ProjectV2 { fields(first: 20) { nodes { ... on ProjectV2SingleSelectField { id name options { id name } } } } } } }'
+```
+
+Extract `project_id`, `status_field_id`, Todo/In Progress/Done option IDs.
+
+**6d. Write `.paadhai.json`** (after all IDs are known):
 ```json
 {
   "version": "1",
@@ -180,19 +214,6 @@ All at once — no intermediate confirmations.
 ```
 
 > If the user left target version blank, omit the `project_version` field entirely.
-
-[SHELL] Create GitHub repo (new projects only):
-```bash
-gh repo create {repo-name} --{public|private} --source=. --remote=origin --push
-```
-
-[SHELL] Create `develop` branch (if missing):
-```bash
-git checkout -b develop
-git push -u origin develop
-```
-
-[DELEGATE][FAST-MODEL] Create or link project board (if needed).
 
 ---
 
