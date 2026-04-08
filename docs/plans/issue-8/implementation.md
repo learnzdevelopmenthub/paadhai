@@ -4,7 +4,7 @@
 
 | Step | Description | Status |
 |------|-------------|--------|
-| 1 | Add `[PROGRESS]` marker to `references/claude-tools.md` | pending |
+| 1 | Add `[PROGRESS]` marker to `references/claude-tools.md` | done |
 | 2 | Instrument `dev-implement/SKILL.md` | pending |
 | 3 | Instrument `dev-parallel/SKILL.md` | pending |
 | 4 | Instrument `dev-plan/SKILL.md` | pending |
@@ -130,7 +130,7 @@ and graceful degradation behavior.
 Refs #8"
 ```
 
-**Status:** pending
+**Status:** done
 
 ---
 
