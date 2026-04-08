@@ -2,7 +2,7 @@
 
 > **AI-native SDLC pipeline**: 21 skills covering every stage of software development, from project setup through production release.
 
-Paadhai (Tamil for *path*) is a structured collection of AI agent skills that guide you through the entire software development lifecycle. Each skill is a self-contained workflow that knows where it fits in the pipeline, what to do, and what comes next — so your AI agent never improvises where consistency matters.
+Paadhai (Tamil for *path*) is a structured collection of AI agent skills that guide you through the entire software development lifecycle. Each skill is a self-contained workflow that knows where it fits in the pipeline, what to do, and what comes next, so your AI agent never improvises where consistency matters.
 
 Works with **Claude Code**, **Cursor**, **Codex CLI**, **OpenCode**, and **Gemini CLI**.
 
@@ -10,7 +10,7 @@ Works with **Claude Code**, **Cursor**, **Codex CLI**, **OpenCode**, and **Gemin
 
 ## How it works
 
-Every project starts with a single config file (`.paadhai.json`) that captures your repo, stack, and branching strategy. Every skill reads from this file — no hardcoded values, no repeated setup.
+Every project starts with a single config file (`.paadhai.json`) that captures your repo, stack, and branching strategy. Every skill reads from this file with no hardcoded values and no repeated setup.
 
 The skills are organized into four pipelines:
 
@@ -167,7 +167,7 @@ For urgent production issues that can't wait for the normal dev loop.
 | Command | What it does | Output |
 |---------|-------------|--------|
 | `/dev-hotfix` | Branch from main, implement minimal fix, open PR directly to main | Hotfix PR to main |
-| `/dev-rollback` | Recover from a bad release — revert tags, redeploy previous version | Rollback + incident notes |
+| `/dev-rollback` | Recover from a bad release: revert tags, redeploy previous version | Rollback + incident notes |
 
 **Hotfix flow:**
 ```
@@ -184,13 +184,13 @@ Run any of these at any point in the pipeline, standalone.
 
 | Command | When to use |
 |---------|------------|
-| `/dev-debug` | Something is broken and you don't know why — 4-phase systematic debug |
+| `/dev-debug` | Something is broken and you don't know why: 4-phase systematic debug |
 | `/dev-unblock` | CI is failing or there's a merge conflict blocking your PR |
-| `/dev-parallel` | You have multiple independent issues to work — dispatches parallel subagents |
+| `/dev-parallel` | You have multiple independent issues to work, dispatches parallel subagents |
 | `/dev-deps` | Audit dependencies for CVEs, license issues, and outdated packages |
 | `/dev-docs` | Generate API reference, user guide, or architecture overview from the codebase |
 | `/dev-adr` | Record an Architecture Decision Record for a significant design choice |
-| `/dev-status` | Read-only dashboard — see open issues, PRs, CI status, milestone progress |
+| `/dev-status` | Read-only dashboard: open issues, PRs, CI status, milestone progress |
 
 ---
 
