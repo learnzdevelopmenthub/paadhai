@@ -9,7 +9,7 @@
 | 3 | Instrument `dev-parallel/SKILL.md` | done |
 | 4 | Instrument `dev-plan/SKILL.md` | done |
 | 5 | Instrument `project-plan/SKILL.md` | done |
-| 6 | Instrument `release-plan/SKILL.md` | pending |
+| 6 | Instrument `release-plan/SKILL.md` | done |
 | 7 | Instrument `dev-release/SKILL.md` | pending |
 
 ---
@@ -565,7 +565,7 @@ then completed.
 Refs #8"
 ```
 
-**Status:** pending
+**Status:** done
 
 ---
 
