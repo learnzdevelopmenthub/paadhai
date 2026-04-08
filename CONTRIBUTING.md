@@ -16,6 +16,7 @@ Paadhai eats its own dog food. Use Paadhai to contribute to Paadhai:
 ```
 /dev-start #<issue>      → create feature branch
 /dev-plan                → plan the implementation
+/dev-test                → generate test plan + stubs from acceptance criteria
 /dev-implement           → implement step-by-step
 /dev-pr                  → open pull request
 /dev-audit               → review the changes
