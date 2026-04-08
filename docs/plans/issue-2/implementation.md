@@ -8,12 +8,12 @@ branch: feature/2-plugin-homepage-github-pages
 
 | Step | Description | Status |
 |------|-------------|--------|
-| 1 | Create and push `gh-pages` branch | pending |
-| 2 | Scaffold `index.html` | pending |
-| 3 | Write `assets/css/style.css` | pending |
-| 4 | Write `assets/js/main.js` | pending |
-| 5 | Enable GitHub Pages via API | pending |
-| 6 | Commit and push to `gh-pages` | pending |
+| 1 | Create and push `gh-pages` branch | done |
+| 2 | Scaffold `index.html` | done |
+| 3 | Write `assets/css/style.css` | done |
+| 4 | Write `assets/js/main.js` | done |
+| 5 | Enable GitHub Pages via API | done |
+| 6 | Commit and push to `gh-pages` | done |
 
 ---
 
@@ -1239,14 +1239,6 @@ _None yet._
 
 ---
 
-## Step 2 — Scaffold `index.html`
-
-Create `index.html` in the root of the `gh-pages` branch. Since we work on the feature branch and commit to `gh-pages` at the end, create this file now in a staging area, then push in Step 6.
-
-**Expected:** File created. Open in browser — page renders with placeholder styling.
-
----
-
 ## Deviations
 
-_None yet._
+_None. All steps executed as planned._
