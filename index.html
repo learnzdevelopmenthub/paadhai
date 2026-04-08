@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Paadhai — AI-native SDLC pipeline. 21 skills covering every stage of software development for Claude Code, Cursor, Codex CLI, and Gemini CLI." />
+  <title>Paadhai — AI-native SDLC Pipeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="logo-text">பாதை</span>
+        <span class="logo-sub">paadhai</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+      </ul>
+      <a href="https://github.com/learnzdevelopmenthub/paadhai" class="btn btn-outline" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+    </div>
+    <div class="container hero-content">
+      <div class="hero-badge animate-fade-up">Open Source &middot; MIT License</div>
+      <h1 class="hero-title animate-fade-up delay-1">
+        <span class="title-tamil">பாதை</span>
+        <span class="title-divider"></span>
+        <span class="title-main">Paadhai</span>
+      </h1>
+      <p class="hero-tagline animate-fade-up delay-2">
+        <span id="typewriter"></span><span class="cursor">|</span>
+      </p>
+      <p class="hero-sub animate-fade-up delay-3">21 skills. Every stage of software development. Zero improvisation.</p>
+      <div class="hero-agents animate-fade-up delay-4">
+        <span class="agent-chip">Claude Code</span>
+        <span class="agent-chip">Cursor</span>
+        <span class="agent-chip">Codex CLI</span>
+        <span class="agent-chip">Gemini CLI</span>
+        <span class="agent-chip">OpenCode</span>
+      </div>
+      <div class="hero-cta animate-fade-up delay-5">
+        <a href="#install" class="btn btn-primary">Get Started</a>
+        <a href="#how-it-works" class="btn btn-ghost">See how it works &rarr;</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint animate-fade-up delay-5">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">The Pipeline</p>
+        <h2 class="section-title">Structured from day one to production</h2>
+        <p class="section-desc">Every skill knows its place. Every handoff is explicit. No improvisation where consistency matters.</p>
+      </div>
+      <div class="pipeline-track reveal">
+
+        <div class="pipeline-card">
+          <div class="pipeline-tag">SETUP</div>
+          <div class="pipeline-steps">
+            <div class="pipe-step">/project-init</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/project-plan</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/release-plan</div>
+          </div>
+          <p class="pipeline-desc">Once per project — scaffold config, generate SRS, create GitHub milestones and issues.</p>
+        </div>
+
+        <div class="pipeline-card featured">
+          <div class="pipeline-tag tag-gold">DEV LOOP</div>
+          <div class="pipeline-steps">
+            <div class="pipe-step">/dev-start</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-plan</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-test</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-implement</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-pr</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-audit</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-ship</div>
+          </div>
+          <p class="pipeline-desc">Once per issue — branch creation through merge with security review and board sync.</p>
+        </div>
+
+        <div class="pipeline-card">
+          <div class="pipeline-tag">RELEASE</div>
+          <div class="pipeline-steps">
+            <div class="pipe-step">/dev-release</div>
+          </div>
+          <p class="pipeline-desc">Tag version, generate changelog, publish GitHub Release, close milestone.</p>
+        </div>
+
+        <div class="pipeline-card">
+          <div class="pipeline-tag tag-red">EMERGENCY</div>
+          <div class="pipeline-steps">
+            <div class="pipe-step">/dev-hotfix</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-pr</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-ship</div>
+            <div class="pipe-arrow">&rarr;</div>
+            <div class="pipe-step">/dev-release</div>
+          </div>
+          <p class="pipeline-desc">Fast-path for urgent production fixes — branch from main, minimal fix, direct to production.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section section-dark" id="skills">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">21 Skills</p>
+        <h2 class="section-title">Every stage covered</h2>
+        <p class="section-desc">Self-contained workflows. Each skill knows what comes before it and what comes next.</p>
+      </div>
+      <div class="skills-grid reveal">
+        <div class="skill-card"><span class="skill-cmd">/project-init</span><p>Initialize repo, write config, create branches</p></div>
+        <div class="skill-card"><span class="skill-cmd">/project-plan</span><p>Generate SRS from your product idea</p></div>
+        <div class="skill-card"><span class="skill-cmd">/release-plan</span><p>Create GitHub milestones and issues</p></div>
+        <div class="skill-card skill-gold"><span class="skill-cmd">/dev-start</span><p>Pick issue, create branch, sync board</p></div>
+        <div class="skill-card skill-gold"><span class="skill-cmd">/dev-plan</span><p>Security assessment, design review, implementation plan</p></div>
+        <div class="skill-card skill-gold"><span class="skill-cmd">/dev-test</span><p>Test plan + stubs from acceptance criteria</p></div>
+        <div class="skill-card skill-gold"><span class="skill-cmd">/dev-implement</span><p>Execute plan step by step with code review</p></div>
+        <div class="skill-card skill-gold"><span class="skill-cmd">/dev-pr</span><p>Push branch, open PR, poll CI</p></div>
+        <div class="skill-card skill-gold"><span class="skill-cmd">/dev-audit</span><p>Architecture + security + compatibility review</p></div>
+        <div class="skill-card skill-gold"><span class="skill-cmd">/dev-ship</span><p>Merge PR, update board, clean up branch</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-release</span><p>Tag, changelog, GitHub Release, close milestone</p></div>
+        <div class="skill-card skill-red"><span class="skill-cmd">/dev-hotfix</span><p>Emergency fix — fast-path from main</p></div>
+        <div class="skill-card skill-red"><span class="skill-cmd">/dev-rollback</span><p>Recover from a bad release</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-debug</span><p>4-phase systematic debugging with escalation</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-unblock</span><p>Fix CI failures and merge conflicts</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-parallel</span><p>Dispatch independent tasks to parallel subagents</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-deps</span><p>CVE scan, license check, outdated packages</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-docs</span><p>Generate API, user, and architecture docs</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-adr</span><p>Record Architecture Decision Records</p></div>
+        <div class="skill-card"><span class="skill-cmd">/dev-status</span><p>Read-only project progress dashboard</p></div>
+        <div class="skill-card"><span class="skill-cmd">/paadhai-skill</span><p>Scaffold and register new skills</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section class="section" id="install">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">Installation</p>
+        <h2 class="section-title">Works with your AI agent</h2>
+        <p class="section-desc">One command. Any agent.</p>
+      </div>
+      <div class="install-tabs reveal">
+        <div class="tab-buttons">
+          <button class="tab-btn active" data-tab="claude">Claude Code</button>
+          <button class="tab-btn" data-tab="cursor">Cursor</button>
+          <button class="tab-btn" data-tab="codex">Codex CLI</button>
+          <button class="tab-btn" data-tab="gemini">Gemini CLI</button>
+        </div>
+        <div class="tab-panels">
+          <div class="tab-panel active" id="tab-claude">
+            <div class="code-block">
+              <button class="copy-btn" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <pre><code>/plugin install paadhai</code></pre>
+            </div>
+            <p class="install-note">Or manually: <code>cp -r paadhai/.claude/skills/* ~/.claude/skills/</code></p>
+          </div>
+          <div class="tab-panel" id="tab-cursor">
+            <p class="install-note">Search <strong>"Paadhai"</strong> in the Cursor plugin marketplace, or:</p>
+            <div class="code-block">
+              <button class="copy-btn" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <pre><code>git clone https://github.com/learnzdevelopmenthub/paadhai.git
+cp -r paadhai/.cursor-plugin/ your-project/</code></pre>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-codex">
+            <div class="code-block">
+              <button class="copy-btn" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <pre><code>git clone https://github.com/learnzdevelopmenthub/paadhai.git
+cp -r paadhai/.codex-plugin/ your-project/
+cp paadhai/AGENTS.md your-project/</code></pre>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-gemini">
+            <div class="code-block">
+              <button class="copy-btn" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <pre><code>gemini extensions install paadhai</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK START -->
+  <section class="section section-dark" id="quickstart">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-label">Quick Start</p>
+        <h2 class="section-title">From idea to production</h2>
+        <p class="section-desc">Three pipelines. One config file. No guesswork.</p>
+      </div>
+      <div class="quickstart-block reveal">
+        <div class="code-block code-block-lg">
+          <button class="copy-btn" title="Copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copy</span>
+          </button>
+          <pre><code><span class="c-comment"># 1. Set up your project (once)</span>
+/project-init     <span class="c-comment"># creates .paadhai.json</span>
+/project-plan     <span class="c-comment"># generates docs/srs.md</span>
+/release-plan     <span class="c-comment"># creates GitHub milestones + issues</span>
+
+<span class="c-comment"># 2. Start a feature (per issue)</span>
+/dev-start <span class="c-num">#1</span>     <span class="c-comment"># branch: feature/1-my-feature</span>
+/dev-plan         <span class="c-comment"># security analysis + implementation plan</span>
+/dev-test         <span class="c-comment"># test plan + stubs</span>
+/dev-implement    <span class="c-comment"># execute the plan</span>
+/dev-pr           <span class="c-comment"># open PR, poll CI</span>
+/dev-audit        <span class="c-comment"># architecture + security review</span>
+/dev-ship         <span class="c-comment"># merge + board updated</span>
+
+<span class="c-comment"># 3. Release</span>
+/dev-release      <span class="c-comment"># tag, changelog, GitHub Release</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-text">பாதை</span>
+        <span class="footer-tagline">The path through your SDLC.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/learnzdevelopmenthub/paadhai" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/learnzdevelopmenthub/paadhai/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+        <a href="https://github.com/learnzdevelopmenthub/paadhai/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+      <p class="footer-copy">Built with Paadhai &middot; &copy; 2026 Learnz Development Hub</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
