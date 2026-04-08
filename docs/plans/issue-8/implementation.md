@@ -7,7 +7,7 @@
 | 1 | Add `[PROGRESS]` marker to `references/claude-tools.md` | done |
 | 2 | Instrument `dev-implement/SKILL.md` | done |
 | 3 | Instrument `dev-parallel/SKILL.md` | done |
-| 4 | Instrument `dev-plan/SKILL.md` | pending |
+| 4 | Instrument `dev-plan/SKILL.md` | done |
 | 5 | Instrument `project-plan/SKILL.md` | pending |
 | 6 | Instrument `release-plan/SKILL.md` | pending |
 | 7 | Instrument `dev-release/SKILL.md` | pending |
@@ -411,7 +411,7 @@ then completed.
 Refs #8"
 ```
 
-**Status:** pending
+**Status:** done
 
 ---
 
