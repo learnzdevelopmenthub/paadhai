@@ -1,6 +1,6 @@
 # Paadhai (பாதை)
 
-> **AI-native SDLC pipeline** — 21 skills covering every stage of software development, from project setup through production release.
+> **AI-native SDLC pipeline**: 21 skills covering every stage of software development, from project setup through production release.
 
 Paadhai (Tamil for *path*) is a structured collection of AI agent skills that guide you through the entire software development lifecycle. Each skill is a self-contained workflow that knows where it fits in the pipeline, what to do, and what comes next — so your AI agent never improvises where consistency matters.
 
@@ -37,8 +37,8 @@ Support skills (`/dev-debug`, `/dev-unblock`, `/dev-deps`, `/dev-docs`, `/dev-ad
 | Tool | Version | Purpose |
 |------|---------|---------|
 | `git` | 2.x+ | Version control |
-| `gh` | 2.x+ | GitHub CLI — run `gh auth login` before first use |
-| AI agent | — | Claude Code, Cursor, Codex CLI, OpenCode, or Gemini CLI |
+| `gh` | 2.x+ | GitHub CLI (run `gh auth login` before first use) |
+| AI agent | any | Claude Code, Cursor, Codex CLI, OpenCode, or Gemini CLI |
 
 ---
 
@@ -266,4 +266,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
