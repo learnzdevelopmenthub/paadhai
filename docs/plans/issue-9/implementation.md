@@ -11,7 +11,7 @@ status: pending
 |------|-------------|--------|
 | 1 | Define preamble templates | done |
 | 2 | Insert preamble into issue-aware skills (14 files) | done |
-| 3 | Insert preamble into non-issue skills (8 files) | pending |
+| 3 | Insert preamble into non-issue skills (8 files) | done |
 | 4 | Verify all 22 skills have preamble | pending |
 
 ---

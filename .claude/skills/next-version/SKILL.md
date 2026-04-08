@@ -9,6 +9,23 @@ Bump project_version in .paadhai.json, validate semver, commit, and optionally c
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+Display:
+```
+────────────────────────────────────────
+next-version
+7 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:

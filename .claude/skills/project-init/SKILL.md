@@ -9,6 +9,23 @@ Set up a new or existing GitHub project, write `.paadhai.json`, create branches 
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+Display:
+```
+────────────────────────────────────────
+project-init
+9 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+---
+
 ## STEP 1 — Verify Prerequisites
 
 [SHELL] Check GitHub CLI auth:

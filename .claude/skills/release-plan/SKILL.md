@@ -11,6 +11,23 @@ Break the confirmed SRS into GitHub milestones and atomic issues, then create th
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+Display:
+```
+────────────────────────────────────────
+release-plan
+8 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+---
+
 ## STEP 1 — Load Config + SRS
 
 [READ] `.paadhai.json` — hard stop if missing:

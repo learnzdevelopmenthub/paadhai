@@ -9,6 +9,23 @@ Scan project dependencies for security vulnerabilities, license compliance issue
 
 ---
 
+## PREAMBLE — Announcement Banner
+
+[SHELL] Detect context:
+```bash
+BRANCH=$(git branch --show-current)
+```
+
+Display:
+```
+────────────────────────────────────────
+dev-deps
+8 steps | Branch: <branch>
+────────────────────────────────────────
+```
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
