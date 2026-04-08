@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Paadhai — AI-native SDLC pipeline. 21 skills covering every stage of software development for Claude Code, Cursor, Codex CLI, and Gemini CLI." />
+  <meta name="description" content="Paadhai — AI-native SDLC pipeline. 22 skills covering every stage of software development for Claude Code, Cursor, Codex CLI, and Gemini CLI." />
   <title>Paadhai — AI-native SDLC Pipeline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -49,7 +49,7 @@
       <p class="hero-tagline animate-fade-up delay-2">
         <span id="typewriter"></span><span class="cursor">|</span>
       </p>
-      <p class="hero-sub animate-fade-up delay-3">21 skills. Every stage of software development. Zero improvisation.</p>
+      <p class="hero-sub animate-fade-up delay-3">22 skills. Every stage of software development. Zero improvisation.</p>
       <div class="hero-agents animate-fade-up delay-4">
         <span class="agent-chip">Claude Code</span>
         <span class="agent-chip">Cursor</span>
@@ -93,7 +93,7 @@
         <div class="pipeline-card">
           <div class="pipeline-tag tag-blue">NEXT MAJOR VERSION</div>
           <div class="pipeline-steps">
-            <div class="pipe-step">Update project_version</div>
+            <div class="pipe-step">/next-version</div>
             <div class="pipe-arrow">&rarr;</div>
             <div class="pipe-step">/project-plan</div>
             <div class="pipe-arrow">&rarr;</div>
@@ -152,7 +152,7 @@
   <section class="section section-dark" id="skills">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-label">21 Skills</p>
+        <p class="section-label">22 Skills</p>
         <h2 class="section-title">Every stage covered</h2>
         <p class="section-desc">Self-contained workflows. Each skill knows what comes before it and what comes next.</p>
       </div>
@@ -177,6 +177,7 @@
         <div class="skill-card"><span class="skill-cmd">/dev-docs</span><p>Generate API, user, and architecture docs</p></div>
         <div class="skill-card"><span class="skill-cmd">/dev-adr</span><p>Record Architecture Decision Records</p></div>
         <div class="skill-card"><span class="skill-cmd">/dev-status</span><p>Read-only project progress dashboard</p></div>
+        <div class="skill-card"><span class="skill-cmd">/next-version</span><p>Bump project version, validate, commit</p></div>
         <div class="skill-card"><span class="skill-cmd">/paadhai-skill</span><p>Scaffold and register new skills</p></div>
       </div>
     </div>
@@ -264,7 +265,7 @@ cp paadhai/AGENTS.md your-project/</code></pre>
 /release-plan     <span class="c-comment"># creates GitHub milestones + issues</span>
 
 <span class="c-comment"># 1b. Plan next major version (v2.0, v3.0, ...)</span>
-<span class="c-comment"># Update project_version to "2.0" in .paadhai.json, then:</span>
+/next-version     <span class="c-comment"># bumps project_version in .paadhai.json</span>
 /project-plan     <span class="c-comment"># generates docs/srs-v2.0.md (loads v1.0 SRS as context)</span>
 /release-plan     <span class="c-comment"># creates v2.1, v2.2 milestones + issues</span>
 
