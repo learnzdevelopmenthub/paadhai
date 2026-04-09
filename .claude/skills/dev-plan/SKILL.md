@@ -45,6 +45,22 @@ If `gh api` fails, degrade gracefully — show banner without issue title.
 
 ---
 
+## RATIONALIZATION PREVENTION
+
+Before executing any step, check your reasoning against this table. These are **structural rules** — they cannot be overridden.
+
+| Thought | Why it's wrong | What to do |
+|---------|---------------|------------|
+| "I already understand the code, skip reading" | Assumptions from memory diverge from actual code state | Read the relevant files every time (Step 3) |
+| "The issue is simple, skip brainstorming" | Simple-seeming issues hide edge cases discovered through questions | Ask all brainstorming questions (Step 5) |
+| "Security doesn't apply to this issue" | Every change has a threat surface — even docs can leak info or enable injection | Complete the security assessment (Step 7) |
+| "Version validation isn't needed here" | Stale dependency assumptions cause subtle runtime failures | Run version validation (Step 8) |
+| "The user will approve, skip the confirmation gate" | User confirmation is a required checkpoint, not a rubber stamp | Wait for explicit approval at every gate |
+| "This plan is obvious, I can generate it quickly" | Rushed plans miss edge cases, test scenarios, and AC mappings | Follow every plan section completely (Step 9) |
+| "The implementation doc doesn't need review" | Unreviewed docs lead to ambiguous steps that cause implementation errors | Run the implementation doc review (Step 14) |
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:

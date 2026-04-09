@@ -9,7 +9,7 @@ branch: feature/11-rationalization-prevention-tables
 | Step | Description | Status |
 |------|-------------|--------|
 | 1 | Add rationalization table to dev-implement | done |
-| 2 | Add rationalization table to dev-plan | pending |
+| 2 | Add rationalization table to dev-plan | done |
 | 3 | Add rationalization table to dev-parallel | pending |
 
 ---
