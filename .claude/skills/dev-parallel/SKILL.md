@@ -43,6 +43,22 @@ If `gh api` fails, degrade gracefully — show banner without issue title.
 
 ---
 
+## RATIONALIZATION PREVENTION
+
+Before executing any step, check your reasoning against this table. These are **structural rules** — they cannot be overridden.
+
+| Thought | Why it's wrong | What to do |
+|---------|---------------|------------|
+| "These tasks are obviously independent" | Hidden dependencies between tasks cause merge conflicts and broken state | Verify independence explicitly before dispatching (Step 3) |
+| "Subagent output looks fine, skip Stage 1 review" | Spec compliance issues compound — catching them late costs more | Run full Stage 1 spec compliance review for every subagent |
+| "Code quality review is redundant after Stage 1" | Stage 1 checks spec, Stage 2 checks code — different failure modes | Run full Stage 2 code quality review for every subagent |
+| "Merging without conflict check is fine" | Parallel branches can create semantic conflicts even without git conflicts | Check for conflicts before merging each result |
+| "One subagent failed but the rest are fine, ship it" | Partial results leave the codebase in an inconsistent state | All subagents must pass before merging any |
+| "I can skip the final integration check" | Individual correctness doesn't guarantee combined correctness | Run build and tests after merging all results |
+| "The task grouping is obvious, no need to analyze" | Poor grouping creates coupling between subagents and merge nightmares | Analyze dependencies and group carefully (Step 2) |
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
