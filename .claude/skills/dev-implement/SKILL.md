@@ -52,6 +52,22 @@ If `gh api` fails, degrade gracefully — show banner without issue title.
 
 ---
 
+## RATIONALIZATION PREVENTION
+
+Before executing any step, check your reasoning against this table. These are **structural rules** — they cannot be overridden.
+
+| Thought | Why it's wrong | What to do |
+|---------|---------------|------------|
+| "This step is trivial, skip review" | Trivial changes cause subtle bugs — off-by-one, wrong variable, missed import | Run full code review for every step |
+| "Tests aren't needed for this change" | Every code change needs verification; untested code is unverified code | Write or run tests as specified |
+| "The build will obviously pass" | Build failures catch real issues — type errors, missing deps, broken imports | Run `{config.stack.build_cmd}` every time |
+| "I'll commit these steps together" | Atomic commits aid debugging and revert; batching hides which step broke | One commit per step |
+| "I already know this works" | Memory is unreliable — verify, don't assume | Run the verification command and read actual output |
+| "This is just a config change, no review needed" | Config errors cause silent production failures | Review config changes like code changes |
+| "I can skip lint, the code is clean" | Lint catches issues humans miss — formatting, unused vars, import order | Run `{config.stack.lint_cmd}` every time |
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
