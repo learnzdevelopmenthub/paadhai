@@ -10,7 +10,7 @@ branch: feature/12-verification-gate-dev-implement
 |------|--------------------------------------------------------------|---------|
 | 1    | Insert `## VERIFICATION GATE` section into dev-implement     | done    |
 | 2    | Insert `### 7d.1 — Verification Gate` sub-step into Step 7   | done    |
-| 3    | Verify edits and confirm all ACs addressed                   | pending |
+| 3    | Verify edits and confirm all ACs addressed                   | done    |
 
 ---
 
