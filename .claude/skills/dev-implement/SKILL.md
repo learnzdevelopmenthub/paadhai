@@ -281,6 +281,16 @@ For each `pending` step in the implementation doc:
 
 Fix failures before proceeding.
 
+### 7d.1 — Verification Gate
+
+Run the 5-step VERIFICATION GATE (defined in the `## VERIFICATION GATE` section at the top of this file) before marking this step `done`.
+
+- **Inputs to the gate**: the exact output from 7d's `{config.stack.build_cmd}` and `{config.stack.lint_cmd}`, plus any test command output for this step. Output must be fresh — re-run if you do not have it captured.
+- **Docs-only step**: if 7d was skipped (no source files changed), run `{config.stack.lint_cmd}` (if available) or the relevant content-verification command (`Read`/`Grep`) and quote its output.
+- **On PASS**: proceed to 7e.
+- **On FAIL**: do not proceed to 7e. Do not commit. Fix the unmet items listed by the gate and re-run the gate from step 2 (RUN).
+- **Hedging auto-retrigger**: if your CLAIM contains `should`, `probably`, `seems to`, `I believe`, or lacks a quoted output block, restart the gate from RUN before proceeding.
+
 ### 7e — Update Implementation Doc
 [WRITE] Mark step as `done` in implementation doc. Add deviation note if step differed from plan.
 
