@@ -68,6 +68,67 @@ Before executing any step, check your reasoning against this table. These are **
 
 ---
 
+## VERIFICATION GATE
+
+Before declaring any step `done`, you MUST run this 5-step gate. This is a **structural rule** — it cannot be overridden, skipped, or abbreviated. The gate runs per-step inside Step 7 (see sub-step 7d.1).
+
+**Commands must be re-run every time — results cannot be recalled from memory.** Memory is unreliable; the only acceptable evidence is fresh command output captured during this gate run.
+
+### The 5 steps
+
+1. **IDENTIFY** — What specific claims am I about to make about this step? List each one (e.g., "tests pass", "build succeeds", "file X contains Y").
+2. **RUN** — Execute the verification command(s) for each claim: `{config.stack.build_cmd}`, `{config.stack.lint_cmd}`, `{config.stack.test_cmd}`, or a `Read`/`Grep` for content claims. Do not reuse output from an earlier run.
+3. **READ** — Read the ACTUAL output of each command. Do not summarize from memory. Do not paraphrase.
+4. **VERIFY** — For each claim from IDENTIFY, check the output line-by-line. Does the output literally confirm the claim?
+5. **CLAIM** — Only now may you state the step is complete. Every claim must be followed by a quoted block of the exact output that proves it.
+
+### Red flags — restart the gate from RUN
+
+If your CLAIM message contains any of the following, you MUST restart from step 2 (RUN):
+
+- Hedging words: `should`, `probably`, `seems to`, `I believe`, `appears to`, `looks like`
+- No quoted command output block for a claim
+- Claims without a specific file path + line reference (for content claims)
+- Output quoted from an earlier step or earlier gate run (must be fresh)
+
+### Edge case — docs-only step (7d skipped)
+
+If Step 7d was skipped because no source files changed, the gate still runs: execute `{config.stack.lint_cmd}` (if available) or the relevant `Read`/`Grep` command to verify the docs claim, and quote that output in CLAIM.
+
+### PASS format
+
+```
+GATE: PASS
+
+Claims verified:
+1. <claim>
+   Evidence:
+   ```
+   <quoted command output>
+   ```
+2. <claim>
+   Evidence:
+   ```
+   <quoted command output>
+   ```
+```
+
+### FAIL format
+
+If any claim cannot be verified, the gate FAILS and the step stays `pending`. Do not proceed to 7e. Do not commit.
+
+```
+GATE: FAIL
+
+Unmet items:
+1. Claim "<claim>" — <reason, e.g., "no output quoted", "output shows 2 failures", "hedging language used">
+2. Claim "<claim>" — <reason>
+
+Next action: fix the missing evidence above and re-run the gate from step 2 (RUN).
+```
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
