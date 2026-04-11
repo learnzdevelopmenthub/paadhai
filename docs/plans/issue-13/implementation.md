@@ -10,16 +10,16 @@ branch: feature/13-add-verification-gate-dev-parallel
 
 | Step | Description | Status |
 |------|-------------|--------|
-| 1 | Add `[VERIFY]` marker row to claude-tools.md table | pending |
-| 2 | Add `## [VERIFY] Convention` section to claude-tools.md | pending |
-| 3 | Commit 1 — docs(claude-tools) | pending |
-| 4 | Add 2 rationalization rows to dev-parallel | pending |
-| 5 | Update preamble step count 14 → 15 | pending |
-| 6 | Update Step 1 TodoWrite checklist (14 → 15 items) | pending |
-| 7 | Update Step 4 subagent prompt (new rules + report format) | pending |
-| 8 | Insert new Step 8 — Validate Subagent Reports | pending |
-| 9 | Renumber old Steps 8–14 to 9–15 | pending |
-| 10 | Commit 2 — feat(dev-parallel) | pending |
+| 1 | Add `[VERIFY]` marker row to claude-tools.md table | done |
+| 2 | Add `## [VERIFY] Convention` section to claude-tools.md | done |
+| 3 | Commit 1 — docs(claude-tools) | done |
+| 4 | Add 2 rationalization rows to dev-parallel | done |
+| 5 | Update preamble step count 14 → 15 | done |
+| 6 | Update Step 1 TodoWrite checklist (14 → 15 items) | done |
+| 7 | Update Step 4 subagent prompt (new rules + report format) | done |
+| 8 | Insert new Step 8 — Validate Subagent Reports | done |
+| 9 | Renumber old Steps 8–14 to 9–15 | done |
+| 10 | Commit 2 — feat(dev-parallel) | done |
 
 ---
 
