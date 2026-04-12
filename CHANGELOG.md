@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2.0 — 2026-04-12
+
+### Features
+- Add [VERIFY] gate and document in claude-tools.md (ec43814) (#13)
+- Add 5-step verification gate to dev-implement (09d295d) (#12)
+- Add rationalization prevention tables to dev-implement, dev-plan, dev-parallel (c3d21bb) (#11)
+
 ## v2.1.0 — 2026-04-08
 
 ### Features
