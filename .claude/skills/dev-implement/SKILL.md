@@ -52,6 +52,83 @@ If `gh api` fails, degrade gracefully — show banner without issue title.
 
 ---
 
+## RATIONALIZATION PREVENTION
+
+Before executing any step, check your reasoning against this table. These are **structural rules** — they cannot be overridden.
+
+| Thought | Why it's wrong | What to do |
+|---------|---------------|------------|
+| "This step is trivial, skip review" | Trivial changes cause subtle bugs — off-by-one, wrong variable, missed import | Run full code review for every step |
+| "Tests aren't needed for this change" | Every code change needs verification; untested code is unverified code | Write or run tests as specified |
+| "The build will obviously pass" | Build failures catch real issues — type errors, missing deps, broken imports | Run `{config.stack.build_cmd}` every time |
+| "I'll commit these steps together" | Atomic commits aid debugging and revert; batching hides which step broke | One commit per step |
+| "I already know this works" | Memory is unreliable — verify, don't assume | Run the verification command and read actual output |
+| "This is just a config change, no review needed" | Config errors cause silent production failures | Review config changes like code changes |
+| "I can skip lint, the code is clean" | Lint catches issues humans miss — formatting, unused vars, import order | Run `{config.stack.lint_cmd}` every time |
+
+---
+
+## VERIFICATION GATE
+
+Before declaring any step `done`, you MUST run this 5-step gate. This is a **structural rule** — it cannot be overridden, skipped, or abbreviated. The gate runs per-step inside Step 7 (see sub-step 7d.1).
+
+**Commands must be re-run every time — results cannot be recalled from memory.** Memory is unreliable; the only acceptable evidence is fresh command output captured during this gate run.
+
+### The 5 steps
+
+1. **IDENTIFY** — What specific claims am I about to make about this step? List each one (e.g., "tests pass", "build succeeds", "file X contains Y").
+2. **RUN** — Execute the verification command(s) for each claim: `{config.stack.build_cmd}`, `{config.stack.lint_cmd}`, `{config.stack.test_cmd}`, or a `Read`/`Grep` for content claims. Do not reuse output from an earlier run.
+3. **READ** — Read the ACTUAL output of each command. Do not summarize from memory. Do not paraphrase.
+4. **VERIFY** — For each claim from IDENTIFY, check the output line-by-line. Does the output literally confirm the claim?
+5. **CLAIM** — Only now may you state the step is complete. Every claim must be followed by a quoted block of the exact output that proves it.
+
+### Red flags — restart the gate from RUN
+
+If your CLAIM message contains any of the following, you MUST restart from step 2 (RUN):
+
+- Hedging words: `should`, `probably`, `seems to`, `I believe`, `appears to`, `looks like`
+- No quoted command output block for a claim
+- Claims without a specific file path + line reference (for content claims)
+- Output quoted from an earlier step or earlier gate run (must be fresh)
+
+### Edge case — docs-only step (7d skipped)
+
+If Step 7d was skipped because no source files changed, the gate still runs: execute `{config.stack.lint_cmd}` (if available) or the relevant `Read`/`Grep` command to verify the docs claim, and quote that output in CLAIM.
+
+### PASS format
+
+```
+GATE: PASS
+
+Claims verified:
+1. <claim>
+   Evidence:
+   ```
+   <quoted command output>
+   ```
+2. <claim>
+   Evidence:
+   ```
+   <quoted command output>
+   ```
+```
+
+### FAIL format
+
+If any claim cannot be verified, the gate FAILS and the step stays `pending`. Do not proceed to 7e. Do not commit.
+
+```
+GATE: FAIL
+
+Unmet items:
+1. Claim "<claim>" — <reason, e.g., "no output quoted", "output shows 2 failures", "hedging language used">
+2. Claim "<claim>" — <reason>
+
+Next action: fix the missing evidence above and re-run the gate from step 2 (RUN).
+```
+
+---
+
 ## STEP 1 — Load Config
 
 [READ] `.paadhai.json` — hard stop if missing:
@@ -203,6 +280,16 @@ For each `pending` step in the implementation doc:
 ```
 
 Fix failures before proceeding.
+
+### 7d.1 — Verification Gate
+
+Run the 5-step VERIFICATION GATE (defined in the `## VERIFICATION GATE` section at the top of this file) before marking this step `done`.
+
+- **Inputs to the gate**: the exact output from 7d's `{config.stack.build_cmd}` and `{config.stack.lint_cmd}`, plus any test command output for this step. Output must be fresh — re-run if you do not have it captured.
+- **Docs-only step**: if 7d was skipped (no source files changed), run `{config.stack.lint_cmd}` (if available) or the relevant content-verification command (`Read`/`Grep`) and quote its output.
+- **On PASS**: proceed to 7e.
+- **On FAIL**: do not proceed to 7e. Do not commit. Fix the unmet items listed by the gate and re-run the gate from step 2 (RUN).
+- **Hedging auto-retrigger**: if your CLAIM contains `should`, `probably`, `seems to`, `I believe`, or lacks a quoted output block, restart the gate from RUN before proceeding.
 
 ### 7e — Update Implementation Doc
 [WRITE] Mark step as `done` in implementation doc. Add deviation note if step differed from plan.
