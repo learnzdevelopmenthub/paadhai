@@ -12,7 +12,7 @@ status: pending
 | 1 | Replace binary auto-commit question with commit mode prompt | done |
 | 2 | Update G-06 gate wording | done |
 | 3 | Update skill description lines | done |
-| 4 | Verify internal consistency | pending |
+| 4 | Verify internal consistency | done |
 | 5 | Commit changes | pending |
 
 ---
@@ -151,4 +151,5 @@ Refs #14"
 
 ## Deviations
 
-(none)
+- **Commit cadence**: Implementation committed per-step (auto-commit mode selected by user) instead of a single final commit at Step 5. The doc's Step 5 commit block therefore became a summary/no-op rather than a grouping commit.
+- **Allowed reference count**: The doc predicted 4 allowed `auto-commit` references post-edit; actual grep found 3. The 4th row in the doc's table ("I'll commit these steps together") is wording in the rationalization table that does not contain the literal `auto-commit` substring, so it does not show up in a grep for that term. Left unmodified as the doc instructed.
