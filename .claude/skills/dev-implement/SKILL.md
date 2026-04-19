@@ -1,11 +1,11 @@
 ---
 name: dev-implement
-description: Use when implementing confirmed plans — execute steps with code review, auto-commit, and subagent delegation for independent tasks
+description: Use when implementing confirmed plans — execute steps with code review, commit mode selection, and subagent delegation for independent tasks
 ---
 
 # dev-implement: Execute Implementation
 
-Execute the implementation doc step-by-step with code review, auto-commit, and optional subagent delegation.
+Execute the implementation doc step-by-step with code review, commit mode selection, and optional subagent delegation.
 
 ---
 
@@ -184,7 +184,21 @@ Doc path  : docs/plans/issue-<n>/implementation.md
 
 Ask user:
 - Model preference? (fast / smart / auto)
-- Auto-commit after each step? (yes / no)
+
+Present commit mode selection using AskUserQuestion:
+
+**Prompt text:** "Implementation has <total step count> steps. How would you like to handle commits?"
+
+**Options:**
+| Label | Description |
+|-------|-------------|
+| Per-step (Recommended) | Approve each commit individually (current behavior) |
+| Auto-commit | Commit automatically after each passing step |
+| Batch | Commit at natural checkpoints (after related groups) |
+
+Store the selection as `commit_mode` (`per-step` | `auto-commit` | `batch`) for use by G-06 and downstream commit logic.
+
+The total step count is derived from the implementation doc's progress table (count of rows excluding the header).
 
 [PROGRESS] Mark Step 2/10 `completed`: `Step 2/10: Load Implementation Doc [completed]`
 `Files read: docs/plans/issue-<n>/implementation.md, docs/plans/issue-<n>/plan.md`
@@ -304,7 +318,7 @@ Lint          : ✓ / ✗
 Code review   : PASS / SKIP
 ```
 
-**G-06**: If auto-commit = yes → commit automatically. If no → wait for "yes".
+**G-06**: If `commit_mode = per-step` → wait for user approval before committing. If `commit_mode = auto-commit` → commit automatically (logic in #15). If `commit_mode = batch` → defer to batch grouping logic (logic in #16).
 
 ### 7g — Commit
 [SHELL] Commit specific files (not `git add -A`):
