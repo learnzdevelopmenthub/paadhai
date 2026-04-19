@@ -2,7 +2,7 @@
 issue: 14
 title: Add commit mode selection prompt to dev-implement
 branch: feature/14-commit-mode-selection-prompt
-status: pending
+status: done
 ---
 
 ## Progress
@@ -13,7 +13,7 @@ status: pending
 | 2 | Update G-06 gate wording | done |
 | 3 | Update skill description lines | done |
 | 4 | Verify internal consistency | done |
-| 5 | Commit changes | pending |
+| 5 | Commit changes | done |
 
 ---
 
