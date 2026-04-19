@@ -318,7 +318,7 @@ Lint          : ✓ / ✗
 Code review   : PASS / SKIP
 ```
 
-**G-06**: If auto-commit = yes → commit automatically. If no → wait for "yes".
+**G-06**: If `commit_mode = per-step` → wait for user approval before committing. If `commit_mode = auto-commit` → commit automatically (logic in #15). If `commit_mode = batch` → defer to batch grouping logic (logic in #16).
 
 ### 7g — Commit
 [SHELL] Commit specific files (not `git add -A`):
