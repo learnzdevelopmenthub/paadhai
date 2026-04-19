@@ -1,11 +1,11 @@
 ---
 name: dev-implement
-description: Use when implementing confirmed plans — execute steps with code review, auto-commit, and subagent delegation for independent tasks
+description: Use when implementing confirmed plans — execute steps with code review, commit mode selection, and subagent delegation for independent tasks
 ---
 
 # dev-implement: Execute Implementation
 
-Execute the implementation doc step-by-step with code review, auto-commit, and optional subagent delegation.
+Execute the implementation doc step-by-step with code review, commit mode selection, and optional subagent delegation.
 
 ---
 

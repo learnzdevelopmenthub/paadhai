@@ -11,7 +11,7 @@ status: pending
 |------|-------------|--------|
 | 1 | Replace binary auto-commit question with commit mode prompt | done |
 | 2 | Update G-06 gate wording | done |
-| 3 | Update skill description lines | pending |
+| 3 | Update skill description lines | done |
 | 4 | Verify internal consistency | pending |
 | 5 | Commit changes | pending |
 
