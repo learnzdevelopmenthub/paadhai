@@ -14,7 +14,7 @@ status: pending
 | 1    | Expand G-06 prose at Step 7f with full auto-commit semantics | done    |
 | 2    | Add `--no-verify` safeguard paragraph at end of Step 7g      | done    |
 | 3    | Verify internal consistency (grep assertions)                | done    |
-| 4    | Commit changes                                               | pending |
+| 4    | Commit changes                                               | done    |
 
 ---
 
@@ -143,3 +143,4 @@ Refs #15"
 ## Deviations
 
 - **Step 3 grep #2 (MODE SWITCH count)**: Plan predicted "exactly 1" occurrence of the substring `MODE SWITCH` inside 7f. Actual result: 4 total occurrences (3 prose references in 7f + 1 in the new 7g safeguard paragraph added by Step 2). The *banner literal line* (`MODE SWITCH: auto-commit → per-step`) does appear exactly once at line 332, which is the semantically meaningful check. The plan's stated count was overly strict given that the 7g safeguard paragraph unavoidably names the banner to describe hook-failure behavior. Interpreting the intent (banner literal uniqueness) rather than the literal count — the gate PASSES.
+- **Step 4 (commit cadence)**: Implementation ran in `auto-commit` mode, so Steps 1–3 each produced their own commit as they passed the verification gate. Step 4's "single bundling commit" therefore became a summary/no-op. This is consistent with the note under Step 4 in the implementation doc.
