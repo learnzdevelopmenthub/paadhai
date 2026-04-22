@@ -14,7 +14,7 @@ status: pending
 | 1    | Amend rationalization row at line 64 with batch carve-out            | done    |
 | 2    | Expand G-06 batch bullet at line 326 with full semantics             | done    |
 | 3    | Insert BATCH BROKEN banner after MODE SWITCH banner in Step 7f       | done    |
-| 4    | Verify internal consistency (6 grep assertions)                      | pending |
+| 4    | Verify internal consistency (6 grep assertions)                      | done    |
 | 5    | Commit changes                                                       | pending |
 
 ---
@@ -184,4 +184,7 @@ Refs #16"
 
 ## Deviations
 
-_None yet — populated during implementation._
+- **Step 4 grep #2 (BATCH BROKEN count)**: Plan predicted exactly 2 matches (banner intro + banner literal). Actual = 4. Two extra matches come from the G-06 batch bullet prose added in Step 2 — line 330 (Group fail path bullet names "BATCH BROKEN banner") and line 332 (`--no-verify` forbidden bullet names "BATCH BROKEN banner with reason `hook`"). The semantically meaningful uniqueness check — `grep -c "BATCH BROKEN: batch → per-step"` — returns exactly 1 as intended. Same class of deviation as #15's MODE SWITCH count note. Gate PASSES on intent.
+- **Step 4 grep #4 (`no-verify` count preserved)**: Plan predicted 1 match (the existing 7g safeguard from #15). Actual = 2. The new match at line 332 is inside the G-06 batch bullet's `--no-verify forbidden` sub-point, which is required by the issue scope — batch-mode must state its own `--no-verify` contract alongside the 7g safeguard. Spirit of check (prohibition is explicit and not duplicated/contradicted) holds. Gate PASSES on intent.
+- **Step 4 grep #5 (`commit_mode = batch` ≥2)**: Plan predicted ≥2 matches (rationalization row + G-06 prose). Actual = 1 (rationalization row only). The G-06 batch bullet keys the branch via the bullet header `- **\`batch\`** →` rather than restating `commit_mode = batch` as an equality check; state transitions are phrased as `commit_mode from batch to per-step` (fail path). The critical SRS §6.2 structural-rule reference to the literal `commit_mode = batch` value lives in the rationalization-row carve-out where it is load-bearing. Spirit of check (narrow carve-out wired to the AskUserQuestion-constrained value) holds. Gate PASSES on intent.
+- **Step 5 (commit cadence)**: Implementation ran in `auto-commit` mode, so Steps 1–3 each produced their own commit as they passed the verification gate. Step 4 committed separately with this deviations note. Step 5's "single bundling commit" therefore becomes a summary/no-op. Consistent with the note under Step 5 in this implementation doc.
