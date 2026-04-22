@@ -352,6 +352,16 @@ All remaining steps will use per-step approval.
 ────────────────────────────────────────
 ```
 
+BATCH BROKEN banner (displayed on `batch` fail path, immediately before per-step G-06 re-engages):
+
+```
+────────────────────────────────────────
+BATCH BROKEN: batch → per-step
+Reason: <build | lint | review | gate | hook> failed on step <N> (group <G>)
+Group <G> not committed. All remaining steps will use per-step approval.
+────────────────────────────────────────
+```
+
 ### 7g — Commit
 [SHELL] Commit specific files (not `git add -A`):
 ```bash
