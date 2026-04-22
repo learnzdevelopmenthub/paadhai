@@ -12,7 +12,7 @@ status: pending
 | Step | Description                                                          | Status  |
 |------|----------------------------------------------------------------------|---------|
 | 1    | Amend rationalization row at line 64 with batch carve-out            | done    |
-| 2    | Expand G-06 batch bullet at line 326 with full semantics             | pending |
+| 2    | Expand G-06 batch bullet at line 326 with full semantics             | done    |
 | 3    | Insert BATCH BROKEN banner after MODE SWITCH banner in Step 7f       | pending |
 | 4    | Verify internal consistency (6 grep assertions)                      | pending |
 | 5    | Commit changes                                                       | pending |

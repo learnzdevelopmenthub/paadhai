@@ -323,7 +323,24 @@ Code review   : PASS / SKIP
 - **`per-step`** → wait for explicit user approval before committing (unchanged).
 - **`auto-commit` — pass path** → if build (7d), lint (7d), code review (7c), and verification gate (7d.1) all PASS, commit automatically using 7g with no approval prompt. Unconfigured check commands (empty `{config.stack.build_cmd}` or `{config.stack.lint_cmd}`) are treated as non-blocking: the matching check is skipped, not failed.
 - **`auto-commit` — fail path** → on any FAIL (build, lint, code review, or verification gate), do **not** commit. Flip `commit_mode` from `auto-commit` to `per-step` for the remainder of the session, display the MODE SWITCH banner below, then fall through to per-step G-06 for this failing step once the developer has fixed the issue and re-run the relevant gates. Once flipped, `commit_mode` stays `per-step` for every subsequent step in this session — it does not flip back.
-- **`batch`** → defer to batch grouping logic (logic in #16); unchanged.
+- **`batch`** → group steps by logical concern and commit at group boundaries rather than per step. Semantics:
+  - **Group-key computation**: for each step, `group_key = step.group_metadata` if a `**Group:** <slug>` header is present on the step, else the first 2 path segments of the step's primary file (the first-listed file in its "Files" / modified-files section).
+  - **Group boundaries**: a group closes when the next step's `group_key` differs, or the implementation reaches its final step.
+  - **Group pass path**: on group close, if every member step's 7c (code review), 7d (build + lint), and 7d.1 (verification gate) all PASS, commit the whole group using 7g with the batch commit message format below. No approval prompt.
+  - **Group fail path**: if any member step FAILs (build, lint, code review, verification gate, or pre-commit hook), the group is **not committed**. Display the BATCH BROKEN banner below, flip `commit_mode` from `batch` to `per-step` for the remainder of the session, then fall through to per-step G-06 for the failing step once the developer has fixed the issue and re-run the relevant gates. Uncommitted changes from earlier group-members remain on disk and are handled via per-step G-06 from that point forward — the developer decides per commit what to include. Once flipped, `commit_mode` stays `per-step` for every subsequent step in this session — it does not flip back.
+  - **Edge case — size-1 groups**: when a step's `group_key` differs from both neighbors, its group has size 1; it still commits silently in batch mode (no approval prompt). Mode remains `batch`.
+  - **`--no-verify` forbidden**: batch commits use the same `git commit` invocation as per-step (see 7g safeguard). Pre-commit hook failure → BATCH BROKEN banner with reason `hook`.
+  - **Batch commit message format** (deferred in actual invocation to 7g):
+    ```
+    <type>(<scope>): <group-name> — <N> steps
+
+    - Step <N1>: <description>
+    - Step <N2>: <description>
+    …
+
+    Refs #<issue-number>
+    ```
+    Subject: max 72 chars, imperative mood. `<type>` selected per 7g's commit-type table based on the group's dominant change kind.
 
 MODE SWITCH banner (displayed on `auto-commit` fail path, immediately before per-step G-06 re-engages):
 
