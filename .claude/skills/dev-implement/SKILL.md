@@ -318,7 +318,22 @@ Lint          : ✓ / ✗
 Code review   : PASS / SKIP
 ```
 
-**G-06**: If `commit_mode = per-step` → wait for user approval before committing. If `commit_mode = auto-commit` → commit automatically (logic in #15). If `commit_mode = batch` → defer to batch grouping logic (logic in #16).
+**G-06** branches on `commit_mode`:
+
+- **`per-step`** → wait for explicit user approval before committing (unchanged).
+- **`auto-commit` — pass path** → if build (7d), lint (7d), code review (7c), and verification gate (7d.1) all PASS, commit automatically using 7g with no approval prompt. Unconfigured check commands (empty `{config.stack.build_cmd}` or `{config.stack.lint_cmd}`) are treated as non-blocking: the matching check is skipped, not failed.
+- **`auto-commit` — fail path** → on any FAIL (build, lint, code review, or verification gate), do **not** commit. Flip `commit_mode` from `auto-commit` to `per-step` for the remainder of the session, display the MODE SWITCH banner below, then fall through to per-step G-06 for this failing step once the developer has fixed the issue and re-run the relevant gates. Once flipped, `commit_mode` stays `per-step` for every subsequent step in this session — it does not flip back.
+- **`batch`** → defer to batch grouping logic (logic in #16); unchanged.
+
+MODE SWITCH banner (displayed on `auto-commit` fail path, immediately before per-step G-06 re-engages):
+
+```
+────────────────────────────────────────
+MODE SWITCH: auto-commit → per-step
+Reason: <build | lint | review | gate> failed on step <N>
+All remaining steps will use per-step approval.
+────────────────────────────────────────
+```
 
 ### 7g — Commit
 [SHELL] Commit specific files (not `git add -A`):
@@ -343,6 +358,8 @@ Commit type guide:
 | `perf` | Performance improvement |
 
 Subject: max 72 chars, imperative mood ("add X" not "added X").
+
+Auto-commit uses the same `git commit` invocation as per-step — `--no-verify` is never used. If a pre-commit hook fails, treat it as a step failure: the commit aborts, the MODE SWITCH banner displays with reason `hook`, `commit_mode` flips to `per-step`, and G-06 re-engages for the failing step.
 
 ### 7h — Progress Dashboard
 After each step's commit, display a compact aggregate progress dashboard. Data MUST come from actual command output — never estimate or fabricate values.
