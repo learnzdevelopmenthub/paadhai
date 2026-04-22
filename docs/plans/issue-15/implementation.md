@@ -12,7 +12,7 @@ status: pending
 | Step | Description                                                  | Status  |
 |------|--------------------------------------------------------------|---------|
 | 1    | Expand G-06 prose at Step 7f with full auto-commit semantics | done    |
-| 2    | Add `--no-verify` safeguard paragraph at end of Step 7g      | pending |
+| 2    | Add `--no-verify` safeguard paragraph at end of Step 7g      | done    |
 | 3    | Verify internal consistency (grep assertions)                | pending |
 | 4    | Commit changes                                               | pending |
 

@@ -359,6 +359,8 @@ Commit type guide:
 
 Subject: max 72 chars, imperative mood ("add X" not "added X").
 
+Auto-commit uses the same `git commit` invocation as per-step — `--no-verify` is never used. If a pre-commit hook fails, treat it as a step failure: the commit aborts, the MODE SWITCH banner displays with reason `hook`, `commit_mode` flips to `per-step`, and G-06 re-engages for the failing step.
+
 ### 7h — Progress Dashboard
 After each step's commit, display a compact aggregate progress dashboard. Data MUST come from actual command output — never estimate or fabricate values.
 
