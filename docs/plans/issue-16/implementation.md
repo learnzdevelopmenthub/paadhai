@@ -15,7 +15,7 @@ status: pending
 | 2    | Expand G-06 batch bullet at line 326 with full semantics             | done    |
 | 3    | Insert BATCH BROKEN banner after MODE SWITCH banner in Step 7f       | done    |
 | 4    | Verify internal consistency (6 grep assertions)                      | done    |
-| 5    | Commit changes                                                       | pending |
+| 5    | Commit changes                                                       | done    |
 
 ---
 
