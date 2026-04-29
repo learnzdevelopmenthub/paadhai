@@ -1,6 +1,6 @@
 # Paadhai (பாதை)
 
-> **AI-native SDLC pipeline**: 22 skills covering every stage of software development, from project setup through production release.
+> **AI-native SDLC pipeline**: 19 skills covering every stage of software development, from project setup through production release.
 
 Paadhai (Tamil for *path*) is a structured collection of AI agent skills that guide you through the entire software development lifecycle. Each skill is a self-contained workflow that knows where it fits in the pipeline, what to do, and what comes next, so your AI agent never improvises where consistency matters.
 
@@ -25,13 +25,12 @@ DEV LOOP (once per issue/feature)
   /dev-start → /dev-plan → /dev-test → /dev-implement → /dev-pr → /dev-audit → /dev-ship
 
 RELEASE (once per version)
-  /dev-release
-
-EMERGENCY (for production incidents)
-  /dev-hotfix → /dev-pr → /dev-audit → /dev-ship → /dev-release
+  /dev-release                          # default mode: release
+  /dev-release --mode=hotfix            # emergency fix to main
+  /dev-release --mode=rollback          # recover from bad release
 ```
 
-Support skills (`/dev-debug`, `/dev-unblock`, `/dev-deps`, `/dev-docs`, `/dev-adr`, `/dev-status`, `/dev-rollback`, `/dev-parallel`) run independently at any point.
+Support skills (`/dev-unblock`, `/dev-deps`, `/dev-docs`, `/dev-adr`, `/dev-status`, `/dev-parallel`) run independently at any point.
 
 ---
 
@@ -158,30 +157,23 @@ Run this sequence for every issue or feature. Each skill hands off to the next.
 
 ---
 
-### Release
+### Release Lifecycle
 
-| Command | What it does | Output |
-|---------|-------------|--------|
-| `/dev-release` | Tag version, generate changelog, publish GitHub Release, close milestone, run post-release health check | GitHub Release + closed milestone |
+`/dev-release` is one skill with three modes covering the full release lifecycle:
 
-The health check after release inspects CI status and new issues. If anything looks wrong, it surfaces a `/dev-rollback` signal before you move on.
+| Invocation | Mode | What it does | Output |
+|------------|------|-------------|--------|
+| `/dev-release` | `release` (default) | Cut release branch from develop, run tests, generate changelog, tag, publish GitHub Release, back-merge to develop, close milestone, run post-release health check | GitHub Release + closed milestone |
+| `/dev-release --mode=hotfix` | `hotfix` | Emergency fast-path from main: minimal fix, PR directly to main, bypassing the develop cycle | Hotfix PR to main |
+| `/dev-release --mode=rollback` | `rollback` | Recover from a bad release: delete tag, revert merge commit, create recovery branch | Reverted main + recovery branch |
 
----
-
-### Emergency Pipeline
-
-For urgent production issues that can't wait for the normal dev loop.
-
-| Command | What it does | Output |
-|---------|-------------|--------|
-| `/dev-hotfix` | Branch from main, implement minimal fix, open PR directly to main | Hotfix PR to main |
-| `/dev-rollback` | Recover from a bad release: revert tags, redeploy previous version | Rollback + incident notes |
+The post-release health check inspects CI status and new issues. If anything looks wrong, it surfaces a `/dev-release --mode=rollback` signal before you move on.
 
 **Hotfix flow:**
 ```
-/dev-hotfix → /dev-pr → /dev-audit → /dev-ship → /dev-release
-                                                      ↓
-                                          back-merge main → develop
+/dev-release --mode=hotfix → /dev-audit → /dev-ship → /dev-release
+                                                          ↓
+                                              back-merge main → develop
 ```
 
 ---
@@ -192,9 +184,8 @@ Run any of these at any point in the pipeline, standalone.
 
 | Command | When to use |
 |---------|------------|
-| `/dev-debug` | Something is broken and you don't know why: 4-phase systematic debug |
-| `/dev-unblock` | CI is failing or there's a merge conflict blocking your PR |
-| `/dev-parallel` | You have multiple independent issues to work, dispatches parallel subagents |
+| `/dev-unblock` | CI failing, merge conflict, or test/build/lint/type error blocking progress — auto-classifies the failure and routes to the right fix, with optional 4-phase deep debugging when root cause is unclear |
+| `/dev-parallel` | You have multiple independent task groups in `tasks.md` to work, dispatches parallel subagents |
 | `/dev-deps` | Audit dependencies for CVEs, license issues, and outdated packages |
 | `/dev-docs` | Generate API reference, user guide, or architecture overview from the codebase |
 | `/dev-adr` | Record an Architecture Decision Record for a significant design choice |
@@ -248,9 +239,9 @@ Created automatically by `/project-init`. Every skill reads from this file.
 | PR needs a code review | `/dev-audit` |
 | PR is approved, ready to merge | `/dev-ship` |
 | Ready to tag a release | `/dev-release` |
-| Production is broken right now | `/dev-hotfix` |
-| A release introduced a regression | `/dev-rollback` |
-| Something is broken, unknown cause | `/dev-debug` |
+| Production is broken right now | `/dev-release --mode=hotfix` |
+| A release introduced a regression | `/dev-release --mode=rollback` |
+| Something is broken, unknown cause | `/dev-unblock` (auto-escalates to deep debug) |
 | CI is failing or there's a conflict | `/dev-unblock` |
 | Need to check project health | `/dev-status` |
 | Dependencies have CVEs or are outdated | `/dev-deps` |
@@ -264,7 +255,7 @@ Created automatically by `/project-init`. Every skill reads from this file.
 
 | Feature | Claude Code | Cursor | Codex CLI | OpenCode | Gemini CLI |
 |---------|:-----------:|:------:|:---------:|:--------:|:----------:|
-| All 22 skills | ✓ | ✓ | ✓ | ✓ | ✓ |
+| All 19 skills | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Subagent dispatch | ✓ | Partial | ✗ | ✗ | Partial |
 | Parallel execution | ✓ | Sequential | Sequential | Sequential | Partial |
 | Model selection | ✓ | ✗ | ✗ | ✗ | ✓ |

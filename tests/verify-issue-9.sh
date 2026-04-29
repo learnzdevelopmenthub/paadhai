@@ -58,35 +58,42 @@ preamble_grep_case() {
   sed -n '/^## PREAMBLE/,/^## STEP 1/p' "$file" 2>/dev/null | grep -ci "$pattern" 2>/dev/null || true
 }
 
-# All 22 skill directories
+# All 19 skill directories (post v2.3 consolidation:
+#   dev-debug merged into dev-unblock; dev-hotfix + dev-rollback folded into dev-release as modes)
 ALL_SKILLS=(
-  dev-adr dev-audit dev-debug dev-deps dev-docs dev-hotfix
-  dev-implement dev-parallel dev-plan dev-pr dev-release dev-rollback
+  dev-adr dev-audit dev-deps dev-docs
+  dev-implement dev-parallel dev-plan dev-pr dev-release
   dev-ship dev-start dev-status dev-test dev-unblock
   next-version paadhai-skill project-init project-plan release-plan
 )
 
-# 14 issue-aware skills (Variant A)
+# 12 issue-aware skills (Variant A) — dev-release is now conditionally issue-aware
+# in hotfix/rollback modes (detects issue context from fix/* branches)
 ISSUE_AWARE=(
-  dev-adr dev-audit dev-debug dev-docs dev-hotfix
-  dev-implement dev-parallel dev-plan dev-pr dev-rollback
+  dev-adr dev-audit dev-docs
+  dev-implement dev-parallel dev-plan dev-pr dev-release
   dev-ship dev-start dev-test dev-unblock
 )
 
-# 8 non-issue skills (Variant B)
+# 7 non-issue skills (Variant B)
 NON_ISSUE=(
-  dev-deps dev-release dev-status next-version
+  dev-deps dev-status next-version
   paadhai-skill project-init project-plan release-plan
 )
 
 # Expected step counts per skill
+# (dev-release is mode-dependent — banner has dynamic <N> steps placeholder; skip from check)
 declare -A STEP_COUNTS=(
-  [dev-adr]=10 [dev-audit]=7 [dev-debug]=11 [dev-deps]=8
-  [dev-docs]=8 [dev-hotfix]=12 [dev-implement]=10 [dev-parallel]=14
-  [dev-plan]=17 [dev-pr]=8 [dev-release]=14 [dev-rollback]=8
+  [dev-adr]=10 [dev-audit]=7 [dev-deps]=8
+  [dev-docs]=8 [dev-implement]=10 [dev-parallel]=15
+  [dev-plan]=17 [dev-pr]=8
   [dev-ship]=7 [dev-start]=8 [dev-status]=7 [dev-test]=11
-  [dev-unblock]=8 [next-version]=7 [paadhai-skill]=13
+  [dev-unblock]=10 [next-version]=7 [paadhai-skill]=13
   [project-init]=9 [project-plan]=10 [release-plan]=8
+)
+# Skills with dynamic step counts (skip from TC-15 step-count check)
+declare -A DYNAMIC_STEPS=(
+  [dev-release]=1
 )
 
 echo ""
@@ -96,7 +103,7 @@ echo ""
 # ── Happy Path ────────────────────────────────────────────────────────────────
 echo "Happy Path"
 
-# TC-01: All 22 SKILL.md files contain ## PREAMBLE
+# TC-01: All 19 SKILL.md files contain ## PREAMBLE
 count=0
 for skill in "${ALL_SKILLS[@]}"; do
   f=".claude/skills/$skill/SKILL.md"
@@ -104,7 +111,7 @@ for skill in "${ALL_SKILLS[@]}"; do
     count=$((count + 1))
   fi
 done
-check "TC-01" "All 22 SKILL.md files contain ## PREAMBLE" "$count" eq 22
+check "TC-01" "All 19 SKILL.md files contain ## PREAMBLE" "$count" eq 19
 
 # TC-02: No SKILL.md is missing the preamble
 missing=0
@@ -129,7 +136,7 @@ check "TC-04" "dev-start: preamble has gh api fetch" \
 check "TC-05" "dev-plan: preamble has gh api fetch" \
   "$(preamble_grep 'gh api' .claude/skills/dev-plan/SKILL.md)" ge 1
 
-# TC-06: All 22 skills detect branch via git branch --show-current in preamble
+# TC-06: All 19 skills detect branch via git branch --show-current in preamble
 count=0
 for skill in "${ALL_SKILLS[@]}"; do
   f=".claude/skills/$skill/SKILL.md"
@@ -138,7 +145,7 @@ for skill in "${ALL_SKILLS[@]}"; do
     count=$((count + 1))
   fi
 done
-check "TC-06" "All 22 preambles have git branch --show-current" "$count" eq 22
+check "TC-06" "All 19 preambles have git branch --show-current" "$count" eq 19
 
 # TC-07: dev-implement banner shows "10 steps"
 check "TC-07" "dev-implement: banner shows 10 steps" \
@@ -149,14 +156,14 @@ check "TC-08" "dev-plan: banner shows 17 steps" \
   "$(preamble_grep_fixed '17 steps' .claude/skills/dev-plan/SKILL.md)" ge 1
 
 # TC-09: dev-parallel banner shows "14 steps"
-check "TC-09" "dev-parallel: banner shows 14 steps" \
-  "$(preamble_grep_fixed '14 steps' .claude/skills/dev-parallel/SKILL.md)" ge 1
+check "TC-09" "dev-parallel: banner shows 15 steps" \
+  "$(preamble_grep_fixed '15 steps' .claude/skills/dev-parallel/SKILL.md)" ge 1
 
 # TC-10: dev-status banner shows "7 steps"
 check "TC-10" "dev-status: banner shows 7 steps" \
   "$(preamble_grep_fixed '7 steps' .claude/skills/dev-status/SKILL.md)" ge 1
 
-# TC-11: All 22 skills have box-drawing ──── in preamble
+# TC-11: All 19 skills have box-drawing ──── in preamble
 count=0
 for skill in "${ALL_SKILLS[@]}"; do
   f=".claude/skills/$skill/SKILL.md"
@@ -165,13 +172,13 @@ for skill in "${ALL_SKILLS[@]}"; do
     count=$((count + 1))
   fi
 done
-check "TC-11" "All 22 preambles have box-drawing ────" "$count" eq 22
+check "TC-11" "All 19 preambles have box-drawing ────" "$count" eq 19
 
 echo ""
 # ── Edge Cases ────────────────────────────────────────────────────────────────
 echo "Edge Cases"
 
-# TC-12: Issue-aware skills (14) contain feature/* branch check in preamble
+# TC-12: Issue-aware skills (11) contain feature/* branch check in preamble
 count=0
 for skill in "${ISSUE_AWARE[@]}"; do
   f=".claude/skills/$skill/SKILL.md"
@@ -180,7 +187,7 @@ for skill in "${ISSUE_AWARE[@]}"; do
     count=$((count + 1))
   fi
 done
-check "TC-12" "14 issue-aware preambles reference feature/ branch" "$count" eq 14
+check "TC-12" "12 issue-aware preambles reference feature/ branch" "$count" eq 12
 
 # TC-13: Non-issue skills (8) do NOT contain gh api in preamble
 bad=0
@@ -192,7 +199,7 @@ for skill in "${NON_ISSUE[@]}"; do
     bad=$((bad + 1))
   fi
 done
-check "TC-13" "8 non-issue preambles have no gh api" "$bad" eq 0
+check "TC-13" "7 non-issue preambles have no gh api" "$bad" eq 0
 
 # TC-14: Issue-aware skills have graceful degradation note in preamble
 count=0
@@ -203,11 +210,12 @@ for skill in "${ISSUE_AWARE[@]}"; do
     count=$((count + 1))
   fi
 done
-check "TC-14" "14 issue-aware preambles mention graceful degradation" "$count" eq 14
+check "TC-14" "12 issue-aware preambles mention graceful degradation" "$count" eq 12
 
-# TC-15: Each skill's step count in banner matches expected
+# TC-15: Each skill's step count in banner matches expected (skip dev-release — mode-dependent)
 mismatch=0
 for skill in "${ALL_SKILLS[@]}"; do
+  if [ "${DYNAMIC_STEPS[$skill]:-0}" = "1" ]; then continue; fi
   f=".claude/skills/$skill/SKILL.md"
   expected_n="${STEP_COUNTS[$skill]}"
   c=$(preamble_grep_fixed "${expected_n} steps" "$f")
@@ -216,7 +224,7 @@ for skill in "${ALL_SKILLS[@]}"; do
     mismatch=$((mismatch + 1))
   fi
 done
-check "TC-15" "All 22 banners have correct step count" "$mismatch" eq 0
+check "TC-15" "All non-dynamic banners have correct step count" "$mismatch" eq 0
 
 # TC-16: Preamble appears before ## STEP 1 in every file
 bad=0
@@ -231,7 +239,7 @@ for skill in "${ALL_SKILLS[@]}"; do
     bad=$((bad + 1))
   fi
 done
-check "TC-16" "PREAMBLE before STEP 1 in all 22 files" "$bad" eq 0
+check "TC-16" "PREAMBLE before STEP 1 in all 19 files" "$bad" eq 0
 
 echo ""
 # ── Error / Failure Cases ─────────────────────────────────────────────────────

@@ -1,11 +1,11 @@
 ---
 name: dev-unblock
-description: Use when CI is failing or merge conflicts block progress — diagnose, fix, and re-push until green
+description: Use when CI fails, merge conflicts block progress, or test/build/type/lint failures need diagnosis — auto-classify failure type and fix with optional 4-phase deep debugging when root cause is unclear
 ---
 
-# dev-unblock: CI + Conflict Resolution
+# dev-unblock: Failure Diagnosis + Fix
 
-Detect CI failure type or merge conflict, diagnose, fix, re-push, poll until green.
+Detect failure type (conflict | test | lint | type | build), fix it, re-push, poll until green. Escalates to systematic 4-phase debugging (reproduce → isolate → hypothesize → verify) when root cause is unclear.
 
 ---
 
@@ -27,15 +27,15 @@ Display (with issue context):
 ```
 ────────────────────────────────────────
 dev-unblock | Issue #<number> — <title>
-8 steps | Branch: <branch>
+10 steps | Branch: <branch>
 ────────────────────────────────────────
 ```
 
-Display (no issue context — not on feature/fix branch):
+Display (no issue context):
 ```
 ────────────────────────────────────────
 dev-unblock
-8 steps | Branch: <branch>
+10 steps | Branch: <branch>
 ────────────────────────────────────────
 ```
 
@@ -53,9 +53,11 @@ Store:
 - `{config.repo.owner}` / `{config.repo.name}` / `{config.repo.develop_branch}`
 - `{config.stack.build_cmd}` / `{config.stack.lint_cmd}` / `{config.stack.test_cmd}`
 
+Initialize: `failure_counter = 0`, `deep_debug_used = false`.
+
 ---
 
-## STEP 2 — Detect Failure Type
+## STEP 2 — Auto-Classify Failure Type
 
 [SHELL] Check for merge conflicts:
 ```bash
@@ -75,6 +77,22 @@ Classify failure type:
 - `build` — CI build job failed
 - `multiple` — more than one type
 
+[SHELL] If no automated signal, check for prior debug session:
+```bash
+test -f docs/plans/issue-<n>/debug.md && echo "exists" || echo "none"
+```
+
+If exists → [READ] `docs/plans/issue-<n>/debug.md` and display:
+```
+Prior debug session found — <count> previous attempt(s).
+Last hypothesis: <summary>
+```
+
+If still no failures detected, ask user:
+> "What is failing? (test name, error message, or behavior description)"
+
+Default classification on manual input: `test`.
+
 Display:
 ```
 Failure Detection
@@ -82,9 +100,10 @@ Failure Detection
 Type       : <failure-type>
 Jobs       : <affected job names>
 Files      : <affected files if conflict>
+Source     : <auto-detected | user-reported>
 ```
 
-If no failures detected:
+If no failures and no user report:
 > No CI failures or merge conflicts found. Nothing to unblock.
 
 ---
@@ -120,7 +139,9 @@ gh run view <run-id> --log-failed
 - Is it a flaky test (timing, order-dependent, external service)?
 - Is it a test that needs updating for the new behavior?
 
-Fix the source code or test as appropriate.
+**Diagnosis check:** If root cause is NOT obvious from the output (no clear file:line, no clear trigger) OR a prior fix attempt has already failed, escalate to **STEP 5 (Deep Debug)**.
+
+Otherwise, fix the source code or test directly.
 
 ### 3c — Lint Failure
 
@@ -153,7 +174,7 @@ Manually fix any remaining lint errors that auto-fix cannot resolve.
 
 ## STEP 4 — Fix Gate
 
-**G-13: "Apply fix and re-push? (yes/no)"**
+**G-13: "Apply fix and re-push? (yes / no / escalate to deep debug)"**
 
 Display:
 ```
@@ -164,11 +185,148 @@ Files   : <changed files>
 Summary : <what was fixed>
 ```
 
-Wait for explicit "yes".
+- **yes** → proceed to STEP 6 (Commit + Push)
+- **no** → stop, user retains control
+- **escalate to deep debug** → proceed to STEP 5 (Deep Debug)
 
 ---
 
-## STEP 5 — Commit + Push (after G-13)
+## STEP 5 — Deep Debug (conditional: 4-phase systematic)
+
+**Triggered only when:** test diagnosis is unclear (STEP 3b) OR user escalates from G-13 OR a prior fix has failed.
+
+Set `deep_debug_used = true`.
+
+### 5a — Phase 1: Reproduce
+
+**HARD RULE: No fix proposals in this phase. Only confirm reproduction.**
+
+[SHELL] Run the failing command (from CI output, user input, or `{config.stack.test_cmd}`):
+```bash
+<failing-command>
+```
+
+Capture: exact error output, exit code, stack trace.
+
+[READ] relevant source files from stack trace.
+
+Display:
+```
+Phase 1: Reproduce
+═══════════════════════════
+Reproduced : YES / NO
+Command    : <command run>
+Exit code  : <code>
+Error      : <first 10 lines>
+Stack trace: <file:line references>
+```
+
+If not reproducible → ask user for more specific reproduction steps. Do not proceed.
+
+### 5b — Phase 2: Isolate
+
+**HARD RULE: No fix proposals. Only identify location and trigger.**
+
+[DELEGATE][SMART-MODEL] Narrow root cause:
+
+1. **Which file and line?** — trace from stack trace
+2. **What input triggers it?** — specific data, state, or sequence
+3. **Is it a regression?**
+   ```bash
+   git log --oneline -10 -- <file>
+   ```
+4. **Minimal reproduction path** — smallest set of conditions
+
+[READ] the isolated file(s) to confirm.
+
+Display:
+```
+Phase 2: Isolate
+═══════════════════════════
+File       : <file-path>
+Line       : <line-number>
+Trigger    : <what causes it>
+Regression : YES (commit <sha>) / NO (pre-existing)
+Minimal    : <shortest reproduction path>
+```
+
+### 5c — Phase 3: Hypothesize
+
+[DELEGATE][SMART-MODEL] Generate 1–3 competing hypotheses, ranked by likelihood:
+
+For each hypothesis:
+- **Root cause theory**: what is wrong and why
+- **Predicted fix**: what change would resolve it
+- **Risk**: regressions or side effects
+- **Confidence**: high / medium / low
+
+Display:
+```
+Phase 3: Hypothesize
+═══════════════════════════
+#1 (high)   : <root cause> → <predicted fix>
+              Risk: <side effects>
+#2 (medium) : <root cause> → <predicted fix>
+              Risk: <side effects>
+#3 (low)    : <root cause> → <predicted fix>
+              Risk: <side effects>
+```
+
+Ask user:
+> "Proceed with hypothesis #<n>? (yes / pick #N / describe alternative)"
+
+### 5d — Phase 4: Verify
+
+Implement the chosen fix.
+
+[SHELL] Run the original failing command — it must pass:
+```bash
+<original-failing-command>
+```
+
+[SHELL] Run full test suite — no regressions:
+```bash
+{config.stack.test_cmd}
+```
+
+**If fix works** (both commands pass) → proceed to STEP 6.
+
+**If fix fails** (either still fails):
+1. Revert: `git checkout -- <modified-files>`
+2. Increment `failure_counter`
+3. If `failure_counter >= 3` → proceed to **STEP 5e (Architectural Escalation)**
+4. If `failure_counter < 3` → display "Fix did not work. Returning to hypothesize." → return to **STEP 5c** with new context
+
+### 5e — Architectural Escalation (3+ failed fixes)
+
+[DELEGATE][SMART-MODEL] Architectural review:
+
+- Is the component design fundamentally flawed?
+- Is there a structural issue (wrong abstraction, missing layer, circular dependency)?
+- Should this be a refactor instead of a patch?
+- Are there upstream/downstream assumptions that are broken?
+
+Display:
+```
+Architectural Escalation
+═══════════════════════════
+3+ fix attempts have failed. This may indicate a design issue.
+
+Analysis:
+<architectural findings>
+
+Recommendation: <continue debugging / refactor component / create new issue>
+```
+
+Ask user:
+> "Continue debugging with new approach, or create a refactor issue? (debug / refactor)"
+
+- **debug** → reset `failure_counter = 0`, return to STEP 5b with architectural context
+- **refactor** → display recommendation for new issue, STOP
+
+---
+
+## STEP 6 — Commit + Push
 
 [SHELL] Commit and push:
 ```bash
@@ -181,25 +339,54 @@ Refs #<issue-number>"
 git push origin <current-branch>
 ```
 
+If `deep_debug_used == true`, also stage `docs/plans/issue-<n>/debug.md` (written in STEP 8).
+
 ---
 
-## STEP 6 — Poll CI
+## STEP 7 — Poll CI
 
 [SHELL] Watch CI checks (max 5 minutes):
 ```bash
 gh pr checks <pr-number> --watch --interval 30
 ```
 
-- If all checks pass → proceed to Step 7
-- If CI exceeds 5 minutes → report current status:
+- All checks pass → STEP 8
+- CI exceeds 5 minutes → report current status:
   > CI is still running. Re-run `/paadhai:dev-unblock` to check again.
-- If new failure detected → return to Step 2 (different failure type may appear)
-- Maximum 3 retry loops total. After 3 → stop:
+- New failure detected → return to STEP 2 (different failure type may appear)
+- Maximum 3 retry loops total. After 3 → STOP:
   > 3 fix attempts exhausted. Manual intervention needed.
 
 ---
 
-## STEP 7 — Summary
+## STEP 8 — Record Findings (conditional: only if deep_debug_used == true)
+
+[WRITE] Append to `docs/plans/issue-<n>/debug.md` (create if not exists):
+
+```markdown
+## Debug Session — <timestamp>
+
+Problem    : <user's description>
+Reproduced : <command + abbreviated output>
+Isolated   : <file:line>
+Trigger    : <what causes it>
+Regression : <yes/no + commit if applicable>
+Hypothesis : #<n> — <root cause theory>
+Fix        : <what was changed>
+Verified   : <test command + PASS>
+Attempts   : <failure_counter + 1>
+```
+
+Then amend the previous commit to include this file:
+```bash
+git add docs/plans/issue-<n>/debug.md
+git commit --amend --no-edit
+git push --force-with-lease origin <current-branch>
+```
+
+---
+
+## STEP 9 — Summary
 
 Display:
 ```
@@ -210,27 +397,31 @@ Fix applied      : <summary>
 CI status        : all passing
 Commits added    : <count>
 Retry loops      : <count>
+Deep debug used  : <yes/no>
+```
+
+If deep debug used:
+```
+Debug log        : docs/plans/issue-<n>/debug.md
+Root cause       : <one sentence>
+Attempts         : <failure_counter + 1>
 ```
 
 ---
 
-## STEP 8 — Handoff
-
-Context-aware handoff based on pipeline state:
+## STEP 10 — Handoff
 
 [SHELL] Check PR review status:
 ```bash
 gh pr view --json reviewDecision --jq '.reviewDecision'
 ```
 
-- If PR exists and CI is green, no review yet:
-  ```
-  CI is green. Run /dev-audit to review the PR.
-  ```
-- If PR exists, CI green, and review approved:
-  ```
-  CI is green. Run /dev-ship to merge the PR.
-  ```
+- PR exists, CI green, no review yet:
+  > CI is green. Run `/paadhai:dev-audit` to review the PR.
+- PR exists, CI green, review approved:
+  > CI is green. Run `/paadhai:dev-ship` to merge the PR.
+- No PR yet (deep debug on local branch):
+  > Fix verified locally. Run `/paadhai:dev-pr` to open a PR.
 - Otherwise:
   ```
   CI is green. Resume your workflow.
