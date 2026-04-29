@@ -17,11 +17,8 @@ Read `references/claude-tools.md` for capability marker → tool mappings.
 | `/paadhai:dev-audit` | Architecture + security + compatibility review |
 | `/paadhai:dev-ship` | Merge PR, update board, clean up |
 | `/paadhai:dev-parallel` | Execute independent tasks via parallel subagents |
-| `/paadhai:dev-debug` | Systematic 4-phase debugging with escalation |
-| `/paadhai:dev-unblock` | Fix CI failures and merge conflicts |
-| `/paadhai:dev-release` | Tag, changelog, release, back-merge |
-| `/paadhai:dev-rollback` | Recover from bad releases |
-| `/paadhai:dev-hotfix` | Fast-path for urgent production fixes |
+| `/paadhai:dev-unblock` | Auto-classify and fix CI failures, merge conflicts, and test/build/lint/type errors with optional 4-phase deep debugging |
+| `/paadhai:dev-release` | Release lifecycle — three modes: `release` (default), `--mode=hotfix` (emergency fix to main), `--mode=rollback` (recover from bad release) |
 | `/paadhai:dev-status` | Read-only project progress dashboard |
 | `/paadhai:dev-deps` | Dependency audit: CVEs, licenses, outdated |
 | `/paadhai:dev-docs` | Generate API, user, architecture docs |

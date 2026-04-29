@@ -1,20 +1,20 @@
 ---
 name: dev-implement
-description: Use when implementing confirmed plans — execute steps with code review, auto-commit, and subagent delegation for independent tasks
+description: Use when implementing confirmed plans — execute steps with code review, commit mode selection, and subagent delegation for independent tasks
 ---
 
 # dev-implement: Execute Implementation
 
-Execute the implementation doc step-by-step with code review, auto-commit, and optional subagent delegation.
+Execute the implementation doc step-by-step with code review, commit mode selection, and optional subagent delegation.
 
 ---
 
 ## Resumption
 
 If the user says "continue" or "resume":
-1. [READ] implementation doc → find first step with status `pending`
+1. [READ] `docs/plans/issue-<n>/tasks.md` (or legacy `implementation.md`) → find first task with status `pending`
 2. [SHELL] `git status` → check for uncommitted work
-3. Resume from that step — never re-do `done` steps
+3. Resume from that task — never re-do `done` tasks
 
 ---
 
@@ -61,7 +61,7 @@ Before executing any step, check your reasoning against this table. These are **
 | "This step is trivial, skip review" | Trivial changes cause subtle bugs — off-by-one, wrong variable, missed import | Run full code review for every step |
 | "Tests aren't needed for this change" | Every code change needs verification; untested code is unverified code | Write or run tests as specified |
 | "The build will obviously pass" | Build failures catch real issues — type errors, missing deps, broken imports | Run `{config.stack.build_cmd}` every time |
-| "I'll commit these steps together" | Atomic commits aid debugging and revert; batching hides which step broke | One commit per step |
+| "I'll commit these steps together" | Atomic commits aid debugging and revert; batching hides which step broke | One commit per step — unless `commit_mode = batch`, in which case G-06's batch grouping logic is authoritative |
 | "I already know this works" | Memory is unreliable — verify, don't assume | Run the verification command and read actual output |
 | "This is just a config change, no review needed" | Config errors cause silent production failures | Review config changes like code changes |
 | "I can skip lint, the code is clean" | Lint catches issues humans miss — formatting, unused vars, import order | Run `{config.stack.lint_cmd}` every time |
@@ -70,62 +70,17 @@ Before executing any step, check your reasoning against this table. These are **
 
 ## VERIFICATION GATE
 
-Before declaring any step `done`, you MUST run this 5-step gate. This is a **structural rule** — it cannot be overridden, skipped, or abbreviated. The gate runs per-step inside Step 7 (see sub-step 7d.1).
+Before declaring any step `done`, you MUST run the 5-step `[VERIFY]` gate. This is a **structural rule** — it cannot be overridden, skipped, or abbreviated. The gate runs per-step inside Step 7 (see sub-step 7d.1).
 
-**Commands must be re-run every time — results cannot be recalled from memory.** Memory is unreliable; the only acceptable evidence is fresh command output captured during this gate run.
+**Authoritative definition:** `references/claude-tools.md § [VERIFY] Convention`. Read it once per session.
 
-### The 5 steps
+The gate's contract:
+- 5 steps: IDENTIFY → RUN → READ → VERIFY → CLAIM
+- Commands must be re-run every time — memory is not evidence
+- Output the `GATE: PASS` block with quoted evidence for every claim, or `GATE: FAIL` with unmet items
+- Hedging language (`should`, `probably`, `seems to`, `appears to`, `looks like`) auto-restarts the gate from RUN
 
-1. **IDENTIFY** — What specific claims am I about to make about this step? List each one (e.g., "tests pass", "build succeeds", "file X contains Y").
-2. **RUN** — Execute the verification command(s) for each claim: `{config.stack.build_cmd}`, `{config.stack.lint_cmd}`, `{config.stack.test_cmd}`, or a `Read`/`Grep` for content claims. Do not reuse output from an earlier run.
-3. **READ** — Read the ACTUAL output of each command. Do not summarize from memory. Do not paraphrase.
-4. **VERIFY** — For each claim from IDENTIFY, check the output line-by-line. Does the output literally confirm the claim?
-5. **CLAIM** — Only now may you state the step is complete. Every claim must be followed by a quoted block of the exact output that proves it.
-
-### Red flags — restart the gate from RUN
-
-If your CLAIM message contains any of the following, you MUST restart from step 2 (RUN):
-
-- Hedging words: `should`, `probably`, `seems to`, `I believe`, `appears to`, `looks like`
-- No quoted command output block for a claim
-- Claims without a specific file path + line reference (for content claims)
-- Output quoted from an earlier step or earlier gate run (must be fresh)
-
-### Edge case — docs-only step (7d skipped)
-
-If Step 7d was skipped because no source files changed, the gate still runs: execute `{config.stack.lint_cmd}` (if available) or the relevant `Read`/`Grep` command to verify the docs claim, and quote that output in CLAIM.
-
-### PASS format
-
-```
-GATE: PASS
-
-Claims verified:
-1. <claim>
-   Evidence:
-   ```
-   <quoted command output>
-   ```
-2. <claim>
-   Evidence:
-   ```
-   <quoted command output>
-   ```
-```
-
-### FAIL format
-
-If any claim cannot be verified, the gate FAILS and the step stays `pending`. Do not proceed to 7e. Do not commit.
-
-```
-GATE: FAIL
-
-Unmet items:
-1. Claim "<claim>" — <reason, e.g., "no output quoted", "output shows 2 failures", "hedging language used">
-2. Claim "<claim>" — <reason>
-
-Next action: fix the missing evidence above and re-run the gate from step 2 (RUN).
-```
+For PASS / FAIL message formats, see the convention reference.
 
 ---
 
@@ -165,59 +120,133 @@ Files read: .paadhai.json
 
 ## STEP 2 — Load Implementation Doc
 
-[PROGRESS] Mark Step 2/10 `in_progress`: `Step 2/10: Load Implementation Doc [in_progress]`
+[PROGRESS] Mark Step 2/10 `in_progress`.
 
 [SHELL] Get current branch:
 ```bash
 git branch --show-current
 ```
 
-Derive issue number from branch. [READ] `docs/plans/issue-<n>/implementation.md` + `docs/plans/issue-<n>/plan.md`.
+Derive issue number from branch.
 
-Display:
+### Spec artifact load (preferred)
+
+[READ] all three:
+- `docs/plans/issue-<n>/requirements.md` — REQ-IDs (used in commit messages and verification)
+- `docs/plans/issue-<n>/design.md` — architecture (informs review in Step 7c)
+- `docs/plans/issue-<n>/tasks.md` — atomic task groups with `parallel: true|false` flags
+
+Set `spec_format = "new"`.
+
+Total task count = sum of tasks across all groups in tasks.md.
+
+### Legacy fallback
+
+If `tasks.md` does not exist:
+1. [READ] `docs/plans/issue-<n>/implementation.md` + `docs/plans/issue-<n>/plan.md`
+2. Display LEGACY FORMAT WARNING:
+   ```
+   ────────────────────────────────────────
+   LEGACY PLAN FORMAT DETECTED
+   Issue #<n> uses old plan.md + implementation.md format. dev-implement expects tasks.md
+   with parallel flags. Auto-routing to dev-parallel will be DISABLED for this run.
+   Recommendation: re-run /paadhai:dev-plan to regenerate.
+   ────────────────────────────────────────
+   ```
+3. Set `spec_format = "legacy"`. Total step count = rows in implementation.md progress table.
+
+### Display
+
 ```
-Issue     : #<number> <title>
-Branch    : <branch-name>
-Steps     : <total count>
-Doc path  : docs/plans/issue-<n>/implementation.md
+Issue       : #<number> <title>
+Branch      : <branch-name>
+Spec format : <new | legacy>
+Tasks       : <total count> across <group count> groups (new) | <total count> steps (legacy)
+Parallel    : <count of parallel-flagged groups> (new format only)
 ```
 
 Ask user:
 - Model preference? (fast / smart / auto)
-- Auto-commit after each step? (yes / no)
 
-[PROGRESS] Mark Step 2/10 `completed`: `Step 2/10: Load Implementation Doc [completed]`
-`Files read: docs/plans/issue-<n>/implementation.md, docs/plans/issue-<n>/plan.md`
+Present commit mode selection using AskUserQuestion:
+
+**Prompt text:** "Implementation has <total task count> tasks. How would you like to handle commits?"
+
+**Options:**
+| Label | Description |
+|-------|-------------|
+| Per-task (Recommended) | Approve each commit individually (current behavior) |
+| Auto-commit | Commit automatically after each passing task |
+| Batch | Commit at group boundaries (one commit per group) |
+
+Store the selection as `commit_mode` (`per-step` | `auto-commit` | `batch`) for use by G-06.
+
+In `batch` mode with `spec_format = "new"`, group boundaries come directly from tasks.md `### Group N` headings — overriding the `step.group_metadata` and path-prefix heuristics.
+
+[PROGRESS] Mark Step 2/10 `completed`.
 
 ---
 
 ## STEP 3 — Analyze Task Dependencies
 
-[PROGRESS] Mark Step 3/10 `in_progress`: `Step 3/10: Analyze Task Dependencies [in_progress]`
+[PROGRESS] Mark Step 3/10 `in_progress`.
 
-Scan implementation steps for:
+### When `spec_format = "new"` (tasks.md present)
+
+Read `parallel:` flag and `depends_on:` field from each group in tasks.md. Build:
+- Group dependency graph (DAG)
+- Parallel-eligible group set (`parallel: true`)
+- Sequential-only group set (`parallel: false`)
+
+Display:
+```
+Task Group Analysis
+═══════════════════════════════════════
+Group | Tasks | parallel | depends_on
+──────┼───────┼──────────┼─────────────
+  1   | 3     | false    | none
+  2   | 4     | true     | Group 1
+  3   | 2     | false    | Group 2
+```
+
+If ANY group has `parallel: true` → auto-routing is **available**. If all groups have `parallel: false` → sequential only.
+
+### When `spec_format = "legacy"`
+
+Auto-routing disabled. Continue with the original heuristic:
 - **Sequential patterns**: step B requires step A's output
 - **Independent patterns**: steps with no shared state
 
-If 3+ independent tasks with <20% dependencies → offer subagent-driven mode.
-
-[PROGRESS] Mark Step 3/10 `completed`: `Step 3/10: Analyze Task Dependencies [completed]`
-`Analysis complete`
+[PROGRESS] Mark Step 3/10 `completed`.
 
 ---
 
 ## STEP 4 — Choose Execution Path
 
-[PROGRESS] Mark Step 4/10 `in_progress`: `Step 4/10: Choose Execution Path [in_progress]`
+[PROGRESS] Mark Step 4/10 `in_progress`.
 
+### When `spec_format = "new"` and at least one group is `parallel: true`
+
+Offer:
+1. **Auto-route** (recommended): sequential groups run inline; parallel-flagged groups dispatch to `/paadhai:dev-parallel` automatically
+2. **All sequential**: ignore parallel flags; run every group inline
+
+Display the group analysis and ask user to choose. Default: auto-route.
+
+### When `spec_format = "new"` and all groups are `parallel: false`
+
+Sequential only — proceed automatically. No prompt needed.
+
+### When `spec_format = "legacy"`
+
+Original behavior:
 - **Independent-heavy** → offer: subagent-driven OR sequential
 - **Sequential-heavy** → sequential only
 - **Mixed** → offer choice
 
-Display the dependency analysis and let user choose.
+Store choice as `execution_mode` ∈ `{auto-route, sequential}`.
 
-[PROGRESS] Mark Step 4/10 `completed`: `Step 4/10: Choose Execution Path [completed]`
-`Decision made`
+[PROGRESS] Mark Step 4/10 `completed`.
 
 ---
 
@@ -241,13 +270,34 @@ git status
 
 ## STEP 6 — Route Execution
 
-[PROGRESS] Mark Step 6/10 `in_progress`: `Step 6/10: Route Execution [in_progress]`
+[PROGRESS] Mark Step 6/10 `in_progress`.
 
-- **Subagent-driven** → hand off to `/paadhai:dev-parallel`. Pass the issue number as context.
-- **Sequential** → continue to Step 7
+### When `execution_mode == "auto-route"` (new format)
 
-[PROGRESS] Mark Step 6/10 `completed`: `Step 6/10: Route Execution [completed]`
-`Route determined`
+Iterate over groups in dependency order:
+
+```
+FOR each group in tasks.md (topologically sorted by depends_on):
+  Wait for all groups in `depends_on` to complete.
+
+  IF group.parallel == true:
+    → Dispatch to /paadhai:dev-parallel
+       Pass: PAADHAI_CALLER=dev-implement, PAADHAI_GROUP_ID=<group-name>, issue number
+       dev-parallel handles only this single group, returns commit SHA + status
+    → Wait for completion. On FAIL → escalate to user.
+  ELSE:
+    → Execute group's tasks sequentially via Step 7 (Implementation Loop)
+       on this agent.
+
+  Update tasks.md: mark group's tasks `done`.
+END FOR
+```
+
+### When `execution_mode == "sequential"` or `spec_format == "legacy"`
+
+Run all tasks/steps inline via Step 7 (no auto-routing).
+
+[PROGRESS] Mark Step 6/10 `completed`.
 
 ---
 
@@ -304,7 +354,49 @@ Lint          : ✓ / ✗
 Code review   : PASS / SKIP
 ```
 
-**G-06**: If auto-commit = yes → commit automatically. If no → wait for "yes".
+**G-06** branches on `commit_mode`:
+
+- **`per-step`** → wait for explicit user approval before committing (unchanged).
+- **`auto-commit` — pass path** → if build (7d), lint (7d), code review (7c), and verification gate (7d.1) all PASS, commit automatically using 7g with no approval prompt. Unconfigured check commands (empty `{config.stack.build_cmd}` or `{config.stack.lint_cmd}`) are treated as non-blocking: the matching check is skipped, not failed.
+- **`auto-commit` — fail path** → on any FAIL (build, lint, code review, or verification gate), do **not** commit. Flip `commit_mode` from `auto-commit` to `per-step` for the remainder of the session, display the MODE SWITCH banner below, then fall through to per-step G-06 for this failing step once the developer has fixed the issue and re-run the relevant gates. Once flipped, `commit_mode` stays `per-step` for every subsequent step in this session — it does not flip back.
+- **`batch`** → group steps by logical concern and commit at group boundaries rather than per step. Semantics:
+  - **Group-key computation**: for each step, `group_key = step.group_metadata` if a `**Group:** <slug>` header is present on the step, else the first 2 path segments of the step's primary file (the first-listed file in its "Files" / modified-files section).
+  - **Group boundaries**: a group closes when the next step's `group_key` differs, or the implementation reaches its final step.
+  - **Group pass path**: on group close, if every member step's 7c (code review), 7d (build + lint), and 7d.1 (verification gate) all PASS, commit the whole group using 7g with the batch commit message format below. No approval prompt.
+  - **Group fail path**: if any member step FAILs (build, lint, code review, verification gate, or pre-commit hook), the group is **not committed**. Display the BATCH BROKEN banner below, flip `commit_mode` from `batch` to `per-step` for the remainder of the session, then fall through to per-step G-06 for the failing step once the developer has fixed the issue and re-run the relevant gates. Uncommitted changes from earlier group-members remain on disk and are handled via per-step G-06 from that point forward — the developer decides per commit what to include. Once flipped, `commit_mode` stays `per-step` for every subsequent step in this session — it does not flip back.
+  - **Edge case — size-1 groups**: when a step's `group_key` differs from both neighbors, its group has size 1; it still commits silently in batch mode (no approval prompt). Mode remains `batch`.
+  - **`--no-verify` forbidden**: batch commits use the same `git commit` invocation as per-step (see 7g safeguard). Pre-commit hook failure → BATCH BROKEN banner with reason `hook`.
+  - **Batch commit message format** (deferred in actual invocation to 7g):
+    ```
+    <type>(<scope>): <group-name> — <N> steps
+
+    - Step <N1>: <description>
+    - Step <N2>: <description>
+    …
+
+    Refs #<issue-number>
+    ```
+    Subject: max 72 chars, imperative mood. `<type>` selected per 7g's commit-type table based on the group's dominant change kind.
+
+MODE SWITCH banner (displayed on `auto-commit` fail path, immediately before per-step G-06 re-engages):
+
+```
+────────────────────────────────────────
+MODE SWITCH: auto-commit → per-step
+Reason: <build | lint | review | gate> failed on step <N>
+All remaining steps will use per-step approval.
+────────────────────────────────────────
+```
+
+BATCH BROKEN banner (displayed on `batch` fail path, immediately before per-step G-06 re-engages):
+
+```
+────────────────────────────────────────
+BATCH BROKEN: batch → per-step
+Reason: <build | lint | review | gate | hook> failed on step <N> (group <G>)
+Group <G> not committed. All remaining steps will use per-step approval.
+────────────────────────────────────────
+```
 
 ### 7g — Commit
 [SHELL] Commit specific files (not `git add -A`):
@@ -329,6 +421,8 @@ Commit type guide:
 | `perf` | Performance improvement |
 
 Subject: max 72 chars, imperative mood ("add X" not "added X").
+
+Auto-commit uses the same `git commit` invocation as per-step — `--no-verify` is never used. If a pre-commit hook fails, treat it as a step failure: the commit aborts, the MODE SWITCH banner displays with reason `hook`, `commit_mode` flips to `per-step`, and G-06 re-engages for the failing step.
 
 ### 7h — Progress Dashboard
 After each step's commit, display a compact aggregate progress dashboard. Data MUST come from actual command output — never estimate or fabricate values.

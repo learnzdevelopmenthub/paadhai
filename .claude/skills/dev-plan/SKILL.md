@@ -1,13 +1,16 @@
 ---
 name: dev-plan
-description: Use when planning GitHub issues — brainstorm, design review, security assessment, version validation, generate plan + implementation doc
+description: Use when planning a GitHub issue — brainstorm, design review, security assessment, version validation, then emit three Kiro-style spec artifacts (requirements.md, design.md, tasks.md) that downstream skills consume
 ---
 
-# dev-plan: Issue Planning
+# dev-plan: Issue Planning (Spec-First)
 
-Brainstorm, design review, security assessment, version validation, generate plan + implementation doc for an issue.
+Brainstorm, design review, security assessment, version validation, then generate three spec artifacts:
+- `docs/plans/issue-<n>/requirements.md` — EARS-format acceptance criteria with stable REQ-IDs
+- `docs/plans/issue-<n>/design.md` — architecture, data contracts, key decisions, security
+- `docs/plans/issue-<n>/tasks.md` — atomic, ordered task groups with `parallel: true|false` flags
 
-**Output:** `docs/plans/issue-<n>/plan.md` + `docs/plans/issue-<n>/implementation.md`
+Templates: `templates/requirements.md`, `templates/design.md`, `templates/tasks.md`.
 
 ---
 
@@ -56,8 +59,9 @@ Before executing any step, check your reasoning against this table. These are **
 | "Security doesn't apply to this issue" | Every change has a threat surface — even docs can leak info or enable injection | Complete the security assessment (Step 7) |
 | "Version validation isn't needed here" | Stale dependency assumptions cause subtle runtime failures | Run version validation (Step 8) |
 | "The user will approve, skip the confirmation gate" | User confirmation is a required checkpoint, not a rubber stamp | Wait for explicit approval at every gate |
-| "This plan is obvious, I can generate it quickly" | Rushed plans miss edge cases, test scenarios, and AC mappings | Follow every plan section completely (Step 9) |
-| "The implementation doc doesn't need review" | Unreviewed docs lead to ambiguous steps that cause implementation errors | Run the implementation doc review (Step 14) |
+| "EARS format is overhead, plain ACs are fine" | Plain ACs lose traceability — REQ-IDs are referenced by design.md, tasks.md, and tests | Use EARS templates with stable REQ-IDs (Step 9a) |
+| "I can mark all groups parallel: true to go faster" | Wrongly-flagged groups create merge conflicts and broken state in dev-parallel | Only flag groups with zero shared files/state as parallel: true (Step 9c) |
+| "tasks.md doesn't need atomicity review" | Non-atomic tasks make commit history unreadable and bisect impossible | Run the atomicity review (Step 13) |
 
 ---
 
@@ -84,29 +88,23 @@ Step 5/17: Brainstorming Questions
 Step 6/17: Design Review
 Step 7/17: Security Threat Assessment
 Step 8/17: Version Validation
-Step 9/17: Generate Plan
+Step 9/17: Generate Three Artifacts (Requirements + Design + Tasks)
 Step 10/17: Present Plan
 Step 11/17: Confirmation Loop
-Step 12/17: Save Plan
-Step 13/17: Generate Implementation Doc
-Step 14/17: Review Implementation Doc
-Step 15/17: User Confirms Implementation Doc
+Step 12/17: Save Three Artifacts
+Step 13/17: Validate tasks.md Atomicity
+Step 14/17: Review tasks.md
+Step 15/17: User Confirms tasks.md
 Step 16/17: Commit
 Step 17/17: Handoff
 ```
 (Graceful degradation: skip if TodoWrite unavailable)
 
-[PROGRESS] Mark Step 1/17 `completed`:
-```
-Step 1/17: Load Config [completed]
-Files read: .paadhai.json
-```
+[PROGRESS] Mark Step 1/17 `completed`.
 
 ---
 
 ## STEP 2 — Identify Issue
-
-[PROGRESS] Mark Step 2/17 `in_progress`: `Step 2/17: Identify Issue [in_progress]`
 
 [SHELL] Get current branch:
 ```bash
@@ -128,25 +126,19 @@ Milestone : <milestone>
 Labels    : <labels>
 ```
 
-[PROGRESS] Mark Step 2/17 `completed`: `Step 2/17: Identify Issue [completed]`
-`Issue details fetched`
+[PROGRESS] Mark Step 2/17 `completed`.
 
 ---
 
 ## STEP 3 — Read Relevant Code
 
-[PROGRESS] Mark Step 3/17 `in_progress`: `Step 3/17: Read Relevant Code [in_progress]`
-
 [DELEGATE][FAST-MODEL] Read existing source files relevant to the issue (based on labels and title). Read at minimum 3–5 files. Do not skip — makes questions and plan accurate.
 
-[PROGRESS] Mark Step 3/17 `completed`: `Step 3/17: Read Relevant Code [completed]`
-`Files read: <list of files read>`
+[PROGRESS] Mark Step 3/17 `completed`.
 
 ---
 
 ## STEP 4 — Scope Validation
-
-[PROGRESS] Mark Step 4/17 `in_progress`: `Step 4/17: Scope Validation [in_progress]`
 
 Check:
 - **Clarity**: Can you describe the issue in one sentence?
@@ -155,14 +147,11 @@ Check:
 
 If unclear on any point → ask user before proceeding.
 
-[PROGRESS] Mark Step 4/17 `completed`: `Step 4/17: Scope Validation [completed]`
-`Scope validated`
+[PROGRESS] Mark Step 4/17 `completed`.
 
 ---
 
 ## STEP 5 — Brainstorming Questions
-
-[PROGRESS] Mark Step 5/17 `in_progress`: `Step 5/17: Brainstorming Questions [in_progress]`
 
 Ask 5–7 targeted questions one at a time. Tailor to issue labels:
 - `api` → endpoint design, auth, versioning
@@ -172,18 +161,15 @@ Ask 5–7 targeted questions one at a time. Tailor to issue labels:
 - `infra` → deployment, config management
 
 Always ask:
-- Which acceptance criteria from the SRS apply here?
+- Which acceptance criteria from the SRS apply here? (you'll convert these to EARS REQ-IDs in Step 9a)
 - Anything specific about the existing codebase I should know?
 - Does this align with existing patterns in the codebase?
 
-[PROGRESS] Mark Step 5/17 `completed`: `Step 5/17: Brainstorming Questions [completed]`
-`Questions asked`
+[PROGRESS] Mark Step 5/17 `completed`.
 
 ---
 
 ## STEP 6 — Design Review
-
-[PROGRESS] Mark Step 6/17 `in_progress`: `Step 6/17: Design Review [in_progress]`
 
 [READ] 2–3 similar implementations in the codebase. Check:
 - Pattern alignment
@@ -191,7 +177,7 @@ Always ask:
 - Architectural implications
 - Standards compliance
 
-Note findings for the plan.
+Note findings — these feed Step 9b (Generate Design).
 
 ### Step 6b — ADR Check
 
@@ -202,17 +188,14 @@ If the design review identifies any of the following → flag for ADR:
 - Breaking change to existing interfaces or contracts
 
 Ask user: "This issue involves an architectural decision. Generate an ADR? (yes/no)"
-- **yes** → after plan is saved (Step 12), invoke `/paadhai:dev-adr` with the decision context
-- **no** → note "ADR: declined" in the plan
+- **yes** → after artifacts are saved (Step 12), invoke `/paadhai:dev-adr` with the decision context
+- **no** → note "ADR: declined" in design.md
 
-[PROGRESS] Mark Step 6/17 `completed`: `Step 6/17: Design Review [completed]`
-`Design review complete`
+[PROGRESS] Mark Step 6/17 `completed`.
 
 ---
 
 ## STEP 7 — Security Threat Assessment
-
-[PROGRESS] Mark Step 7/17 `in_progress`: `Step 7/17: Security Threat Assessment [in_progress]`
 
 [DELEGATE][SMART-MODEL] Perform a threat model based on issue labels and design findings:
 
@@ -228,242 +211,189 @@ Ask user: "This issue involves an architectural decision. Generate an ADR? (yes/
 - Dependency trust (new packages being added)
 - Authorization checks on new endpoints/actions
 
-**Output format:**
-```
-## Security Considerations
+Findings feed `design.md § Security Considerations` (Step 9b).
 
-### Attack Surfaces
-- <surface>: <risk level> — <description>
+If no security-relevant attack surfaces are identified → note: "No security-relevant attack surfaces identified for this issue."
 
-### Mitigations
-- <mitigation description>
-
-### Security Checklist
-- [ ] Input validated at all entry points
-- [ ] No sensitive data in error messages
-- [ ] Authorization checked before data access
-- [ ] <issue-specific items>
-```
-
-If no security-relevant attack surfaces are identified → output:
-> No security-relevant attack surfaces identified for this issue.
-
-[PROGRESS] Mark Step 7/17 `completed`: `Step 7/17: Security Threat Assessment [completed]`
-`Security assessment complete`
+[PROGRESS] Mark Step 7/17 `completed`.
 
 ---
 
 ## STEP 8 — Version Validation
-
-[PROGRESS] Mark Step 8/17 `in_progress`: `Step 8/17: Version Validation [in_progress]`
 
 [DELEGATE][FAST-MODEL][SEARCH] Check current stable versions of core packages used in this issue. Verify:
 - Breaking changes since current version
 - Config compatibility
 - Platform-specific issues
 
-Skip for well-known stable APIs (e.g., standard library functions).
+Skip for well-known stable APIs (e.g., standard library functions). Findings feed `tasks.md` (Step 9c) — they may add or modify tasks.
 
-[PROGRESS] Mark Step 8/17 `completed`: `Step 8/17: Version Validation [completed]`
-`Version validation complete`
+[PROGRESS] Mark Step 8/17 `completed`.
 
 ---
 
-## STEP 9 — Generate Plan
+## STEP 9 — Generate Three Artifacts
 
-[PROGRESS] Mark Step 9/17 `in_progress`: `Step 9/17: Generate Plan [in_progress]`
+Produce the content for all three artifacts. They will be written to disk in Step 12.
 
-Create a structured plan:
+### Step 9a — Generate `requirements.md`
 
-```
-## Overview
-<1-2 sentence description>
+[READ] `templates/requirements.md` for structure.
 
-## Files to Create
-- <path>: <purpose>
+Convert acceptance criteria from the issue body and Step 5 brainstorming into **EARS format**:
+- "The system shall <action>"
+- "When <trigger>, the system shall <action>"
+- "The system shall NOT <forbidden behavior>"
 
-## Files to Modify
-- <path>: <what changes>
+Assign **stable IDs**: `REQ-1`, `REQ-2`, … These IDs are referenced in design.md, tasks.md, and the test plan. Do not renumber after commit.
 
-## Implementation Steps
-1. <step description>
-   - Expected: <outcome>
-2. <step description>
-   ...
+Required sections: Overview, Context, Acceptance Criteria, Definitions, Assumptions. Optional: Non-Functional Requirements.
 
-## Test Cases
-- Happy path: <describe>
-- Edge case: <describe>
-- Error case: <describe>
+### Step 9b — Generate `design.md`
 
-## Security Considerations
-<security checklist from Step 7, or "No security-relevant attack surfaces identified">
+[READ] `templates/design.md` for structure.
 
-## AC Mapping
-| AC | How Addressed |
-|----|--------------|
-| AC-1 | <implementation detail> |
+Combine findings from Step 6 (Design Review) and Step 7 (Security Threat Assessment).
 
-## Definition of Done
-- [ ] `{config.stack.build_cmd}` — zero errors
-- [ ] `{config.stack.lint_cmd}` — zero errors
-- [ ] `{config.stack.test_cmd}` — all pass
-- [ ] All ACs checked
-```
+Required sections: Overview, Architecture, Data Structures / API Contracts, Flow, Key Design Decisions, Security Considerations. Optional: Error Handling Strategy, Testing Strategy Outline.
 
-**Critical rules:**
+For each design decision: capture **chosen approach**, **why** (link to REQ-IDs where applicable), **alternatives rejected**.
+
+### Step 9c — Generate `tasks.md`
+
+[READ] `templates/tasks.md` for structure.
+
+Break implementation into **atomic, ordered tasks**. Group by logical concern (e.g., "Core infra", "Endpoints", "Integration").
+
+For each group, set:
+- **`parallel: true|false`** — `true` only if the group has zero shared files/state with siblings AND its tasks have no cross-group ordering constraint. When in doubt, set `false`.
+- **`depends_on:`** — list of group names this group requires
+- **Files** — expected files created/modified per task
+- **Reference** — REQ-IDs from requirements.md and design decision IDs from design.md
+- **Status** — `pending`
+
+`dev-implement` reads this file and **auto-routes parallel-flagged groups** to `dev-parallel`. Mis-flagging a group will cause merge conflicts. Be conservative.
+
+**Critical rules** for all 3 artifacts:
 - ALL `gh api` calls use `{config.repo.owner}/{config.repo.name}` — zero hardcoded repo names
-- ALL build/lint/test commands use `{config.stack.*}` — not `npm run X`
-- ALL branch references use `{config.repo.develop_branch}` — not `develop`
+- ALL build/lint/test commands use `{config.stack.*}`
+- ALL branch references use `{config.repo.develop_branch}`
 
-[PROGRESS] Mark Step 9/17 `completed`: `Step 9/17: Generate Plan [completed]`
-`Plan generated`
+[PROGRESS] Mark Step 9/17 `completed`.
 
 ---
 
 ## STEP 10 — Present Plan
 
-[PROGRESS] Mark Step 10/17 `in_progress`: `Step 10/17: Present Plan [in_progress]`
+Show summaries of all three artifacts:
+- requirements.md: list of REQ-IDs and their one-line summaries
+- design.md: architecture summary, key decisions, security checklist
+- tasks.md: group structure with parallel flags and total task count
 
-Show the full plan.
-
-**G-05: "Does this plan look correct? Approve it or tell me what to change."**
+**G-05: "Do these three artifacts look correct? Approve them or tell me what to change."**
 
 Wait for explicit approval.
 
-[PROGRESS] Mark Step 10/17 `completed`: `Step 10/17: Present Plan [completed]`
-`Plan presented`
+[PROGRESS] Mark Step 10/17 `completed`.
 
 ---
 
 ## STEP 11 — Confirmation Loop
 
-[PROGRESS] Mark Step 11/17 `in_progress`: `Step 11/17: Confirmation Loop [in_progress]`
-
 - **Approved** → proceed to Step 12
-- **Changes requested** → update plan → re-present (repeat Step 10)
+- **Changes requested** → update the relevant artifact(s) → re-present (repeat Step 10)
 - **Question** → answer → update if needed → re-present
 
-[PROGRESS] Mark Step 11/17 `completed`: `Step 11/17: Confirmation Loop [completed]`
-`Plan approved`
+[PROGRESS] Mark Step 11/17 `completed`.
 
 ---
 
-## STEP 12 — Save Plan
+## STEP 12 — Save Three Artifacts
 
-[PROGRESS] Mark Step 12/17 `in_progress`: `Step 12/17: Save Plan [in_progress]`
+[WRITE] all three files atomically:
 
-[WRITE] Save to `docs/plans/issue-<n>/plan.md`:
-
-```yaml
----
-issue: <number>
-title: <title>
-branch: <branch-name>
-milestone: <milestone>
-status: confirmed
-confirmed_at: <timestamp>
----
+```
+docs/plans/issue-<n>/requirements.md
+docs/plans/issue-<n>/design.md
+docs/plans/issue-<n>/tasks.md
 ```
 
-Followed by full plan content.
+Each file follows its template structure (no frontmatter on requirements.md and design.md; tasks.md has frontmatter `issue`, `title`, `total_groups`).
 
 If Step 6b ADR was approved → invoke `/paadhai:dev-adr` now with the architectural decision context.
 
-[PROGRESS] Mark Step 12/17 `completed`: `Step 12/17: Save Plan [completed]`
-`Files changed: docs/plans/issue-<n>/plan.md`
+[PROGRESS] Mark Step 12/17 `completed`.
 
 ---
 
-## STEP 13 — Generate Implementation Doc
+## STEP 13 — Validate tasks.md Atomicity
 
-[PROGRESS] Mark Step 13/17 `in_progress`: `Step 13/17: Generate Implementation Doc [in_progress]`
+[DELEGATE][SMART-MODEL] Self-review tasks.md for the following:
+- Every task has a verification step (command or check)
+- Every task references at least one REQ-ID or design decision
+- Groups marked `parallel: true` have zero file/state overlap with siblings
+- Group dependencies form a DAG (no cycles)
+- No group is empty or contains a single trivial task
 
-[WRITE] Create `docs/plans/issue-<n>/implementation.md`:
+If any check fails → fix tasks.md and re-validate.
 
-Every implementation step must have:
-- Exact command or code snippet
-- Expected output
-- Status: `pending`
-
-Include:
-- Progress table at top (Step | Description | Status)
-- Deviations section at bottom (empty initially)
-
-Must reflect version validation findings from Step 8.
-
-[PROGRESS] Mark Step 13/17 `completed`: `Step 13/17: Generate Implementation Doc [completed]`
-`Files changed: docs/plans/issue-<n>/implementation.md`
+[PROGRESS] Mark Step 13/17 `completed`.
 
 ---
 
-## STEP 14 — Review Implementation Doc
+## STEP 14 — Review tasks.md
 
-[PROGRESS] Mark Step 14/17 `in_progress`: `Step 14/17: Review Implementation Doc [in_progress]`
-
-[READ] `implementation-reviewer-prompt.md` — load review criteria.
-
-[DELEGATE][SMART-MODEL] Review the implementation doc using the loaded reviewer prompt. Reviewer checks:
-- All steps complete with exact commands?
-- File contents missing anywhere?
-- Technical errors?
-- Expected output defined for every step?
-- Could a low-context model follow this without guessing?
+[DELEGATE][SMART-MODEL] Review tasks.md from the perspective of a fresh implementer (low-context model):
+- Could a stateless agent execute this without guessing?
+- Are file paths exact?
+- Are commands runnable as-is?
+- Are expected outputs defined?
 
 **PASS/FAIL only.** Fix and retry until PASS.
 
-[PROGRESS] Mark Step 14/17 `completed`: `Step 14/17: Review Implementation Doc [completed]`
-`Review: PASS`
+[PROGRESS] Mark Step 14/17 `completed`.
 
 ---
 
-## STEP 15 — User Confirms Implementation Doc
+## STEP 15 — User Confirms tasks.md
 
-[PROGRESS] Mark Step 15/17 `in_progress`: `Step 15/17: User Confirms Implementation Doc [in_progress]`
+Present tasks.md.
 
-Present the implementation doc.
-
-**G-05 (impl doc approval): "Does the implementation doc look correct? (yes/no)"**
+**G-05 (tasks approval): "Does tasks.md look correct? (yes/no)"**
 
 Wait for explicit confirmation.
 
-[PROGRESS] Mark Step 15/17 `completed`: `Step 15/17: User Confirms Implementation Doc [completed]`
-`Implementation doc approved`
+[PROGRESS] Mark Step 15/17 `completed`.
 
 ---
 
 ## STEP 16 — Commit
 
-[PROGRESS] Mark Step 16/17 `in_progress`: `Step 16/17: Commit [in_progress]`
-
-[SHELL] Commit plan + implementation doc:
+[SHELL] Commit all three artifacts:
 ```bash
 git add docs/plans/issue-<n>/
-git commit -m "docs(plan): add plan and implementation doc for issue #<n>
+git commit -m "docs(plan): add spec artifacts for issue #<n>
 
-<one-line summary of what will be built>
+requirements.md, design.md, tasks.md generated by /paadhai:dev-plan.
 
 Refs #<n>"
 ```
 
-[PROGRESS] Mark Step 16/17 `completed`: `Step 16/17: Commit [completed]`
-`Committed: docs/plans/issue-<n>/`
+[PROGRESS] Mark Step 16/17 `completed`.
 
 ---
 
 ## STEP 17 — Handoff
 
-[PROGRESS] Mark Step 17/17 `in_progress`: `Step 17/17: Handoff [in_progress]`
-
 ```
-Planning complete. Next step: run /dev-test to create the test plan and stubs.
+Planning complete. Three spec artifacts saved.
 
-Issue       : #<number> <title>
-Plan        : docs/plans/issue-<n>/plan.md
-Impl doc    : docs/plans/issue-<n>/implementation.md
-Steps       : <count>
-Model tip   : Fast model recommended — doc is fully detailed.
+Issue        : #<number> <title>
+Requirements : docs/plans/issue-<n>/requirements.md (<REQ-count> REQ-IDs)
+Design       : docs/plans/issue-<n>/design.md
+Tasks        : docs/plans/issue-<n>/tasks.md (<group-count> groups, <parallel-count> parallel)
+
+Next step: run /paadhai:dev-test to generate test plan and stubs from requirements.md.
 ```
 
-[PROGRESS] Mark Step 17/17 `completed`: `Step 17/17: Handoff [completed]`
-`Output displayed`
+[PROGRESS] Mark Step 17/17 `completed`.

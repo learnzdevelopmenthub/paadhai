@@ -2,7 +2,7 @@
   "name": "paadhai",
   "displayName": "Paadhai — AI SDLC Pipeline",
   "version": "1.0.0",
-  "description": "AI-native SDLC pipeline — 21 skills covering the full software development lifecycle",
+  "description": "AI-native SDLC pipeline — 19 skills covering the full software development lifecycle",
   "author": "Paadhai Project",
   "license": "MIT",
   "keywords": ["sdlc", "devops", "github", "workflow"]

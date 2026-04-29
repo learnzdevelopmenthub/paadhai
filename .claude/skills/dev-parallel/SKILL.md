@@ -103,56 +103,88 @@ Files read: .paadhai.json
 
 ## STEP 2 — Load Implementation Doc
 
-[PROGRESS] Mark Step 2/15 `in_progress`: `Step 2/15: Load Implementation Doc [in_progress]`
+[PROGRESS] Mark Step 2/15 `in_progress`.
 
-[SHELL] Get current branch:
+[SHELL] Get current branch and detect caller:
 ```bash
 git branch --show-current
+echo "Caller: ${PAADHAI_CALLER:-direct}"
+echo "Group:  ${PAADHAI_GROUP_ID:-all-parallel}"
 ```
 
 Derive issue number from branch name (e.g., `feature/42-add-login` → `#42`).
 
-[READ] `docs/plans/issue-<n>/implementation.md` + `docs/plans/issue-<n>/plan.md`.
+### Spec artifact load (preferred)
 
-Display:
+[READ] `docs/plans/issue-<n>/tasks.md`.
+[READ] `docs/plans/issue-<n>/requirements.md` (for REQ-ID context to pass to subagents).
+[READ] `docs/plans/issue-<n>/design.md` (for architecture context).
+
+Set `spec_format = "new"`.
+
+### Caller mode
+
+- **`PAADHAI_CALLER=dev-implement`** (single-group mode): execute only the group named by `PAADHAI_GROUP_ID`. Skip Step 3 (group analysis) — group is already defined. Dispatch one subagent for that group.
+- **direct user invocation** (multi-group mode): scan tasks.md for ALL groups with `parallel: true`. Dispatch a subagent per parallel group. If no parallel-flagged groups exist:
+  > No groups in tasks.md are flagged `parallel: true`. Run `/paadhai:dev-implement` instead — it will execute the sequential groups inline.
+
+### Legacy fallback
+
+If `tasks.md` does not exist:
+1. [READ] `docs/plans/issue-<n>/implementation.md` + `docs/plans/issue-<n>/plan.md`
+2. Display LEGACY FORMAT WARNING (see dev-implement Step 2 for full text)
+3. Set `spec_format = "legacy"` and use the original Step 3 dependency-graph heuristic.
+
+### Display
+
 ```
-Issue     : #<number> <title>
-Branch    : <branch-name>
-Steps     : <total count>
-Doc path  : docs/plans/issue-<n>/implementation.md
+Issue       : #<number> <title>
+Branch      : <branch-name>
+Caller      : <dev-implement | direct>
+Spec format : <new | legacy>
+Mode        : <single-group | multi-group>
+Group(s)    : <list of group names being dispatched>
 ```
 
-[PROGRESS] Mark Step 2/15 `completed`: `Step 2/15: Load Implementation Doc [completed]`
-`Files read: docs/plans/issue-<n>/implementation.md, docs/plans/issue-<n>/plan.md`
+[PROGRESS] Mark Step 2/15 `completed`.
 
 ---
 
 ## STEP 3 — Group Independent Tasks
 
-[PROGRESS] Mark Step 3/15 `in_progress`: `Step 3/15: Group Independent Tasks [in_progress]`
+[PROGRESS] Mark Step 3/15 `in_progress`.
 
-Scan implementation steps and build a dependency graph:
-- **Sequential**: step B requires step A's output (shared file, import, or state)
-- **Independent**: steps with no shared files or state
+### When `spec_format = "new"` and `PAADHAI_CALLER == dev-implement`
 
-Group into task groups. Sequential steps within a group keep their order.
+Skip group derivation. The single group named by `PAADHAI_GROUP_ID` is already defined in tasks.md — read its tasks, files, and `depends_on:` directly. Move to Step 4.
+
+### When `spec_format = "new"` and direct invocation
+
+Filter tasks.md groups to those with `parallel: true`. Build a dispatch list:
+- Each parallel-flagged group becomes one subagent
+- Honor `depends_on:` — dispatch a parallel-flagged group only after its dependencies (sequential or parallel) are confirmed complete
 
 Display:
 ```
-Task Groups
+Parallel Groups (from tasks.md)
 ═══════════════════════════════════════
-Group | Steps       | Files Touched          | Dependencies
-──────┼─────────────┼────────────────────────┼─────────────
-  1   | 1, 2        | src/auth.ts            | none
-  2   | 3, 4, 5     | src/api.ts, src/db.ts  | none
-  3   | 6           | src/auth.ts, src/api.ts | groups 1, 2
+Group | Tasks | Files Touched          | depends_on
+──────┼───────┼────────────────────────┼─────────────
+  2   | 4     | src/api.ts, src/db.ts  | Group 1
+  4   | 3     | src/cache.ts           | Group 2
 ```
+
+### When `spec_format = "legacy"`
+
+Original behavior — scan implementation.md and build a dependency graph:
+- **Sequential**: step B requires step A's output (shared file, import, or state)
+- **Independent**: steps with no shared files or state
+- Group into task groups. Sequential steps within a group keep their order.
 
 If no independent groups found (all sequential) → stop:
 > All tasks are sequential. Use `/paadhai:dev-implement` in sequential mode instead.
 
-[PROGRESS] Mark Step 3/15 `completed`: `Step 3/15: Group Independent Tasks [completed]`
-`Task groups identified`
+[PROGRESS] Mark Step 3/15 `completed`.
 
 ---
 
