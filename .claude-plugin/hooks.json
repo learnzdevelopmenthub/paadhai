@@ -1,0 +1,36 @@
+{
+  "_comment": "Paadhai recommended hooks for Claude Code. Optional — install via /paadhai:project-init. Mirrors deterministic rules in references/git-rules.md (R-G1 through R-G8).",
+  "_install": "Merge into your project-level .claude/settings.json. Do not install globally — these are project-aware.",
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "_rule": "R-G3 + R-G4 — block git add -A and bypass flags before they execute",
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cmd=process.env.TOOL_INPUT||''; if(/git\\\\s+add\\\\s+(-A|\\\\.|--all)\\\\b/.test(cmd))throw new Error('R-G3 violation: stage specific files, never git add -A. See references/git-rules.md');if(/--no-verify|--no-gpg-sign|commit\\\\.gpgsign=false/.test(cmd))throw new Error('R-G4 violation: hook/signature bypass forbidden. See references/git-rules.md');\""
+          },
+          {
+            "_rule": "R-G2 — block force push to main or develop",
+            "type": "command",
+            "command": "node -e \"const cmd=process.env.TOOL_INPUT||'';const fp=/git\\\\s+push.*(--force|--force-with-lease|-f\\\\b)/.test(cmd);const main=/(\\\\bmain\\\\b|\\\\bdevelop\\\\b|\\\\bmaster\\\\b)/.test(cmd);if(fp&&main)throw new Error('R-G2 violation: never force-push to main/develop. See references/git-rules.md');\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "_rule": "R-G1 + R-G6 — validate commit message after a commit was attempted (advisory, non-blocking)",
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'cmd=\"$TOOL_INPUT\"; [[ \"$cmd\" == git\\ commit* ]] || exit 0; subj=$(git log -1 --pretty=%s 2>/dev/null); body=$(git log -1 --pretty=%B 2>/dev/null); if ! echo \"$subj\" | grep -Eq \"^(feat|fix|perf|refactor|test|chore|docs|ci|build|style|revert)(\\\\([a-zA-Z0-9_-]+\\\\))?: .{1,72}$\"; then echo \"R-G1 advisory: subject does not match conventional commit format\" >&2; fi; if echo \"$cmd\" | grep -q \"feature/\\\\|fix/\" && ! echo \"$body\" | grep -Eq \"(Refs|Fixes)\\\\s+#[0-9]+\"; then echo \"R-G6 advisory: missing Refs/Fixes #N in commit body\" >&2; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
