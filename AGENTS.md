@@ -24,11 +24,8 @@ Detect your platform and load the correct reference file:
 | `/dev-audit` | Architecture + security + compatibility review |
 | `/dev-ship` | Merge PR, update board, clean up |
 | `/dev-parallel` | Execute independent tasks via parallel subagents |
-| `/dev-debug` | Systematic 4-phase debugging with escalation |
-| `/dev-unblock` | Fix CI failures and merge conflicts |
-| `/dev-release` | Tag, changelog, release, back-merge |
-| `/dev-rollback` | Recover from bad releases |
-| `/dev-hotfix` | Fast-path for urgent production fixes |
+| `/dev-unblock` | Auto-classify and fix CI failures, merge conflicts, and test/build/lint/type errors with optional 4-phase deep debugging |
+| `/dev-release` | Release lifecycle — three modes: `release` (default), `--mode=hotfix` (emergency fix to main), `--mode=rollback` (recover from bad release) |
 | `/dev-status` | Read-only project progress dashboard |
 | `/dev-deps` | Dependency audit: CVEs, licenses, outdated |
 | `/dev-docs` | Generate API, user, architecture docs |
